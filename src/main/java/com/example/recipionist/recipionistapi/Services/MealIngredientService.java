@@ -26,6 +26,7 @@ public class MealIngredientService {
 
     public void addNewMealIngredientToDatabase(MealIngredient mealIngredient) {
 
+        /*
         Optional<MealIngredient> mealIngredientOptional =
                 mealIngredientRepository.findByIngredientAndMeal( mealIngredient.getIngredient(),
                         mealIngredient.getMeal() );
@@ -36,7 +37,7 @@ public class MealIngredientService {
             throw new IllegalStateException("MealIngredient exists");
         }
         System.out.println("Adding new mealIngredient " + mealIngredient);
-
+        */
         mealIngredientRepository.save(mealIngredient);
     }
 

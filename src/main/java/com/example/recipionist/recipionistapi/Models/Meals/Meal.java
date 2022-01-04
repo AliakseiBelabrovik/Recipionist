@@ -63,7 +63,7 @@ public class Meal {
 
 
     @ManyToOne(
-            cascade = CascadeType.ALL,
+            //cascade = CascadeType.ALL,
             optional = false
     )
     @JoinColumn(
@@ -73,7 +73,7 @@ public class Meal {
     protected MealCategory mealCategory;
 
     @ManyToOne(
-            cascade = CascadeType.ALL,
+            //cascade = CascadeType.ALL,
             optional = false
     )
     @JoinColumn(

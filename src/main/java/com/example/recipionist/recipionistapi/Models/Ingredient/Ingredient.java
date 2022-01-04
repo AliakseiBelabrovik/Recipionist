@@ -41,6 +41,7 @@ public class Ingredient {
     @Column(name = "name", nullable = false, columnDefinition = "TEXT")
     private String ingredientName;
 
+    /*
     //TODO Add OneToMany Relationship with mappedBY attributes from MealIngredient and CocktailIngredient classes
     @OneToMany(
             mappedBy = "ingredient"
@@ -53,6 +54,8 @@ public class Ingredient {
         }
         mealIngredients.add(mealIngredient);
     }
+
+     */
 
     public Long getId() {
         return id;

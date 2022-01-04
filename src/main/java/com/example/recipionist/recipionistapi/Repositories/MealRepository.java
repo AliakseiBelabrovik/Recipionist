@@ -9,5 +9,7 @@ public interface MealRepository extends JpaRepository<Meal, Long> {
 
 
 
+    Meal findByMealName(String name);
+
 
 }
