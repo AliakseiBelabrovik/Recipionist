@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!--This is font from fonts.google.com -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,300;0,400;0,600;0,900;1,300;1,600;1,900&family=Ubuntu:wght@700&display=swap" rel="stylesheet">
+
+    <!-- To ensure proper rendering and touch zooming for all devices, add the responsive viewport meta tag -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap CSS with CDN, must be before stylesheets but after meta -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+
+    <link rel="stylesheet" href="static/Main.css">
+
+    <!-- Free fonts like apple symbol-->
+    <script src="https://kit.fontawesome.com/d2242c312b.js" crossorigin="anonymous"></script>
+
+    <title>Recipionist</title>
+</head>
+
+
+<body>
+<!--
+<header>
+    <h1 class="headerClass">Recipionist - Recipes and more</h1>
+    <img class="headerClass" src="DummyLogo.jpg" alt="Recipionist Logo" id="recipionistLogo">
+</header> -->
+
+<!-- Navbar - don't forget to set active in class to the current page <a class="nav-link active" aria-current="page" ....> -->
+<!-- Sticky-top means is freezes at the top when scroll the page-->
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/main">
+            <i class="fas fa-cocktail logoClass"></i>
+            <!-- <img src="DummyLogo.jpg" alt="" width="30" heigth="24" class="d-inline-block align-text-top">-->
+            Recipionist</a>
+        <span class="navbar-text me-auto">World of taste</span>
+        <!--Button to open the collapsed navbar-->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- DIv in which nav items are collapses in button if small screen -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!--ms-auto for placing the nav ul items to the left -->
+            <!--navbar-nav-scroll to scroll whith style 150px, if delete style - will be default-->
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 150px;">
+                <li class="nav-item">
+                    <!--Indicate the current item by using aria-current="page" for the current page and active in class -->
+                    <a class="nav-link active" aria-current="page" href="/main">Home</a>
+                </li>
+                <li class="nav-item">
+                    <!--Indicate the current item by using aria-current="page" for the current page and active in class -->
+                    <a class="nav-link" aria-current="page" href="/recipes">Recipes</a>
+                </li>
+                <li class="nav-item">
+                    <!--Indicate the current item by using aria-current="page" for the current page and active in class -->
+                    <a class="nav-link" aria-current="page" href="/cocktails">Cocktails</a>
+                </li>
+
+                <!-- Nav regarding the session management -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="session/Login.html" id="navBarDropdown4" role="button" data-bs-toggle="dropdown" aria-expanded="false">Profile</a>
+                    <ul class="dropdown-menu" aria-labelledby="navBarDropdown4">
+
+                        <!-- Get HTTP Requests with nodejs -->
+                        <li><a class="dropdown-item" href="/session/profile">Profile</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="/session/login">Login</a></li>
+                        <li><a class="dropdown-item" href="/session/signup">Sign up</a></li>
+                        <li><a class="dropdown-item" href="/session/createrecipe">Create Recipe</a></li>
+                        <li><a class="dropdown-item" href="/session/logout">Logout</a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#footerId">Contact</a>
+                </li>
+
+                <li class="nav-item">
+                    <button type="button" class="btn btn-outline-light change-mode" id="theme-switcher">Change theme</button>
+                </li>
+
+                <li class="nav-item">
+                    <button type="button" class="btn btn-outline-light" value="click" onclick="picsoff()" id="pics-off">Low bandwidth</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- Title section with the name of the Project and welociming the guests -->
+
+<!-- Then Features maybe with carousel -->
+<main>
+    <section id="titleSection" class="red-section">
+        <div id="containerTitleSection" class="container-fluid">
+            <div class="row">
+
+                <div class="col-sm-6 col">
+                    <h1 style="font-weight: 900">Welcome to the Recipionist's world of taste!</h1>
+
+                    <h1>Let us show you that food is not just a necessity in a life, but an art of living.</h1>
+
+                    <h1>We help you do wonders in the kitchen or at a party. </h1>
+                    <!-- Download button  -->
+                    <button type="button" class="btn btn-dark btn-lg button-download"><i class="fab fa-apple"></i> Download</button>
+                    <button type="button" class="btn btn-outline-light btn-lg button-download"><i class="fab fa-google-play"></i> Download</button>
+
+                </div>
+
+                <div class="col-sm-6">
+                    <!-- class img-thumbnail provides with a 1px border-->
+                    <img class="img-thumbnail" src="static/images/Into1.jpg" alt="Intro1" style="margin-bottom: 5px">
+                    <img class="img-thumbnail" src="static/images/Into2.png" alt="Intro2" style="margin-bottom: 5px">
+                    <img class="img-thumbnail" src="static/images/Intro3.jpg" alt="Intro3" style="margin-bottom: 5px">
+                    <img class="img-thumbnail" src="static/images/Intro4.jpg" alt="Intro4" style="margin-bottom: 5px">
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="descriptionSection" class="white-section">
+        <div content="container-fluid" id="containerDescriptionSection">
+            <div class="row">
+                <div class="col">
+                    <h3 class="descriptionHeader"> Recipionist is service for searching recipes for cooking, baking and cocktails of various types.
+                        It is possible to search by names, ingredients, countries and other criteria. <br><br>
+                        As a result of the search, a fully visualized recipe is displayed, in which even ingredients are with photo. <br><br>
+                        Do you want something new? Then let yourself be surprised by random recipes.
+                    </h3>
+                </div>
+            </div>
+            <div class="row" id="rowWithFeatures">
+                <div class="col-sm-4">
+                    <i class="fas fa-check-circle classSymbol"></i>
+                    <h3>Easy to use. </h3>
+                    <p>Even a 5-year-old child could use it. </p>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fas fa-database classSymbol"></i>
+                    <h3>Wide range of recipes to satisfy all interests and demands.</h3>
+                    <p>Incredibly large database of meals, products and ingredients.</p>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fas fa-images classSymbol"></i>
+                    <h3>Visualized content down to ingredients. </h3>
+                    <p>Cooking and making cocktails have never been so easy. Let our visualized recipes guide you.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+<section id="carouselSectionWithHighlights" class="red-section">
+    <p id="introCarouselSection">Our services</p>
+    <div id="carouselMainPage" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselMainPage" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselMainPage" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselMainPage" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            <button type="button" data-bs-target="#carouselMainPage" data-bs-slide-to="3" aria-label="Slide 4"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active" data-bs-interval="5000">
+                <a href="/recipes">
+                <img src="static/images/Carousel_Meals.jpg" class="d-block w-100" alt="Meal recipes">
+                <!--Captions: We hide them initially with .d-none and bring them back on medium-sized devices with .d-md-block. -->
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Search for meal recipes</h5>
+                    <p>Some representative placeholder content for the second slide.</p>
+                </div>
+                </a>
+            </div>
+            <div class="carousel-item" data-bs-interval="5000">
+                <a href="/cocktails">
+                <img src="static/images/Carousel_Cocktails_2.jpg" class="d-block w-100" alt="Cocktail recipes">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Search for cocktail recipes</h5>
+                    <p>Some representative placeholder content for the second slide.</p>
+                </div>
+                </a>
+            </div>
+            <div class="carousel-item" data-bs-interval="5000">
+                <a href="/main">
+                <img src="static/images/Carousel_RandomRecipe.jpg" class="d-block w-100" alt="Random recipes">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Random recipe</h5>
+                    <p>Some representative placeholder content for the third slide.</p>
+                </div>
+                </a>
+            </div>
+            <div class="carousel-item" data-bs-interval="5000">
+                <a href="/main">
+                <img src="static/images/Carousel_Wines%20Test.jpg" class="d-block w-100" alt="Wines">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Wines</h5>
+                    <p>Some representative placeholder content for the fourth slide.</p>
+                </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- next/previous buttons -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselMainPage" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselMainPage" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</section>
+
+</main>
+
+
+<aside>
+
+</aside>
+
+
+<!-- Footer -->
+<footer class="bg-dark text-center text-white" id="footerId">
+    <!-- Grid container -->
+    <div class="container p-4">
+        <!-- Section: Social media -->
+        <section class="mb-4">
+            <!-- Facebook -->
+            <a class="btn btn-outline-light btn-floating m-1" href="https://www.facebook.com" role="button">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+
+            <!-- Twitter -->
+            <a class="btn btn-outline-light btn-floating m-1" href="https://twitter.com/" role="button">
+                <i class="fab fa-twitter"></i>
+            </a>
+
+            <!-- Instagram -->
+            <a class="btn btn-outline-light btn-floating m-1" href="https://www.instagram.com/" role="button">
+                <i class="fab fa-instagram"></i>
+            </a>
+
+            <!-- Linkedin -->
+            <a class="btn btn-outline-light btn-floating m-1" href="https://www.linkedin.com/" role="button">
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+
+            <!-- Github -->
+            <a class="btn btn-outline-light btn-floating m-1" href="https://github.com/" role="button"
+            ><i class="fab fa-github"></i
+            ></a>
+            <!-- Mail -->
+            <a class="btn btn-outline-light btn-floating m-1" href="mailto:recipionist@example.com?subject=Request&body=Dear%20Recipionist's%20team,%20" role="button">
+                <i class="fas fa-envelope"></i>
+            </a>
+
+        </section>
+        <!-- Section: Social media -->
+
+        <!-- Section: Form -->
+        <section class="">
+            <form action="/main">
+                <!--Grid row-->
+                <div class="row d-flex justify-content-center">
+                    <!--Grid column-->
+                    <div class="col-auto">
+                        <p class="pt-2">
+                            <strong>Sign up for our newsletter</strong>
+                        </p>
+                    </div>
+                    <!--Grid column-->
+
+                    <!--Grid column-->
+                    <div class="col-md-5 col-12">
+                        <!-- Email input -->
+                        <div class="form-outline form-white mb-4">
+                            <input type="email" id="form5Example2" class="form-control" placeholder="Email address" required/>
+                        </div>
+                    </div>
+                    <!--Grid column-->
+
+                    <!--Grid column-->
+                    <div class="col-auto">
+                        <!-- Submit button -->
+                        <button type="submit" class="btn btn-outline-light mb-4">
+                            Subscribe
+                        </button>
+                    </div>
+                    <!--Grid column-->
+                </div>
+                <!--Grid row-->
+            </form>
+        </section>
+        <!-- Section: Form -->
+
+        <!-- Section: Text -->
+        <section class="mb-4">
+            <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt distinctio earum
+                repellat quaerat voluptatibus placeat nam, commodi optio pariatur est quia magnam
+                eum harum corrupti dicta, aliquam sequi voluptate quas.
+            </p>
+        </section>
+        <!-- Section: Text -->
+
+        <!-- Section: Links -->
+        <section class="">
+            <!--Grid row-->
+            <div class="row">
+                <!--Grid column-->
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">Recipes</h5>
+
+                    <ul class="list-unstyled mb-0">
+                        <li>
+                            <a href="#!" class="text-white">Search recipes by name</a>
+                        </li>
+                        <li>
+                            <a href="#!" class="text-white">Search recipes by categories</a>
+                        </li>
+                        <li>
+                            <a href="#!" class="text-white">Search recipes by ingredients</a>
+                        </li>
+                        <li>
+                            <a href="#!" class="text-white">Search recipes by area</a>
+                        </li>
+                    </ul>
+                </div>
+                <!--Grid column-->
+
+                <!--Grid column-->
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">Cocktails</h5>
+
+                    <ul class="list-unstyled mb-0">
+                        <li>
+                            <a href="#!" class="text-white">Search cocktails by name</a>
+                        </li>
+                        <li>
+                            <a href="#!" class="text-white">Search cocktails by categories</a>
+                        </li>
+                        <li>
+                            <a href="#!" class="text-white">Search cocktails by ingredients</a>
+                        </li>
+                        <li>
+                            <a href="#!" class="text-white">Random cocktail recipe</a>
+                        </li>
+                    </ul>
+                </div>
+                <!--Grid column-->
+
+                <!--Grid column-->
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">Random Recipes</h5>
+
+                    <ul class="list-unstyled mb-0">
+                        <li>
+                            <a href="#!" class="text-white">Link 1</a>
+                        </li>
+                        <li>
+                            <a href="#!" class="text-white">Link 2</a>
+                        </li>
+                        <li>
+                            <a href="#!" class="text-white">Link 3</a>
+                        </li>
+                        <li>
+                            <a href="#!" class="text-white">Link 4</a>
+                        </li>
+                    </ul>
+                </div>
+                <!--Grid column-->
+
+                <!--Grid column-->
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">Other links</h5>
+
+                    <ul class="list-unstyled mb-0">
+                        <li>
+                            <a href="session/Login.html" class="text-white">Login</a>
+                        </li>
+                        <li>
+                            <a href="#descriptionSection" class="text-white">About us</a>
+                        </li>
+                        <li>
+                            <a href="Feedback.html" class="text-white">Feedback</a>
+                        </li>
+                        <li>
+                            <a href="mailto:recipionist@example.com?subject=Request&body=Dear%20Recipionist's%20team,%20" class="text-white">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+                <!--Grid column-->
+            </div>
+            <!--Grid row-->
+        </section>
+        <!-- Section: Links -->
+    </div>
+    <!-- Grid container -->
+
+    <!-- Copyright -->
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+        © 2021 Copyright:
+        <a class="text-white" href="GitHubLink!" id="authors">Aliaksei Belabrovik, Andy Bramer, Injacio Gjeluci and Stefan Fuchs</a>
+    </div>
+    <!-- Copyright -->
+</footer>
+<!-- Footer -->
+<!-- Bootstrap and JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+<script src="static/jsfiles/themes.js"></script>
+<script src="static/jsfiles/Picsoff.js"></script>
+</body>
+</html>

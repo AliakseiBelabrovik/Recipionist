@@ -1,0 +1,199 @@
+
+
+/* Code für Signin*/
+
+#sectionSignIn {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
+.form-signin {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
+    text-align: center;
+}
+
+.form-signin .checkbox {
+    font-weight: 400;
+}
+
+.form-signin .form-floating:focus-within {
+    z-index: 2;
+}
+
+
+.form-signin input{
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+
+.form-signin input[type="email"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.form-signin input#floatingConfPassword {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+#sectionSignIn h1 {
+    padding: 3%;
+    font-family: 'Ubuntu', sans-serif;
+    text-align: center;
+}
+
+#sectionSignIn label {
+    font-family: 'Ubuntu', sans-serif;
+    text-align: center;
+}
+.classPlaceholder {
+    color: #8f8f8f;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-style: italic;
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.textCheckBox {
+    font-family: 'Ubuntu', sans-serif;
+    text-align: center;
+}
+
+.submitButton {
+    margin: 0% 0% 0% 0%;
+}
+
+
+
+
+
+/**Some Css for navbar **/
+.navbar {
+    font-size: 1rem;
+    font-family: "Ubuntu";
+    font-weight: bold;
+}
+
+/**Some Css for Brand Name **/
+.navbar-brand{
+    font-size: 2.5rem;
+    font-family: "Ubuntu";
+    font-weight: bold;
+}
+/*Font for the text after the navbar brand*/
+nav span {
+    font-size: 1.25rem;
+    font-family: "Ubuntu";
+    font-weight: bold;
+}
+.logoClass {
+    color: #FFDC00;
+}
+
+.sing-up-logo {
+    color: #FFDC00;
+    font-size: 4.5rem;
+}
+
+.sing-up-logo:hover {
+    color: white;
+}
+
+
+
+
+
+/* Montserrat font for the main content*/
+main {
+    font-family: "Montserrat", sans-serif;
+}
+
+/**
+Background and text color to the title section
+ */
+
+.red-section {
+    background-color: #ff4c68;
+    color: #fff;
+}
+
+.dark-mode-red-section {
+    background-color: #7f7f7f;
+    color: #AAB8C2;
+}
+
+.dark-mode-white-section {
+    background-color: black;
+    color: white;
+}
+
+
+
+
+/* size of the images in header*/
+.img-thumbnail {
+    width: 250px;
+    height: 250px;
+}
+/*padding for container in the title section*/
+#sectionSignIn {
+    /* 3% padding to the top and bottom and 15% to the left and right*/
+    padding: 3% 10%;
+    padding-top: 4.5rem;
+}
+
+
+
+
+
+/*change the size of the images if mobile screen*/
+@media screen and (max-width: 576px) {
+    .img-thumbnail{
+        width: 180px;
+        height: 180px;
+    }
+    .introImg2{
+        width: 180px;
+        height: 180px;
+    }
+}
+
+
+
+/*Footer*/
+footer {
+    font-size: 1rem;
+    font-family: "Ubuntu";
+    font-weight: bold;
+    padding-top: 2rem;
+}
+
+footer ul li a {
+    text-decoration: none;
+}
+
+#authors {
+    text-decoration: none;
+}
+
+
+#changeThemeLabel {
+    font-size: 1.5rem;
+    color: #FFFFFF8C;
+}
+#changeThemeLabel:hover {
+    color: #AAB8C2;
+}
+

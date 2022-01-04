@@ -1,0 +1,206 @@
+
+/**Some Css for navbar **/
+.navbar {
+    font-size: 1rem;
+    font-family: "Ubuntu";
+    font-weight: bold;
+}
+
+/**Some Css for Brand Name **/
+.navbar-brand{
+    font-size: 2.5rem;
+    font-family: "Ubuntu";
+    font-weight: bold;
+}
+/*Font for the text after the navbar brand*/
+nav span {
+    font-size: 1.25rem;
+    font-family: "Ubuntu";
+    font-weight: bold;
+}
+.logoClass {
+    color: #FFDC00;
+}
+
+
+/* Montserrat font for the main content*/
+main {
+    font-family: "Montserrat", sans-serif;
+}
+
+/**
+Background and text color to the title section
+ */
+/*
+#titleSection {
+    background-color: #ff4c68;
+    color: #fff;
+}
+*/
+
+.red-section {
+    background-color: #ff4c68;
+    color: #fff;
+}
+
+/* size of the images in header*/
+.img-thumbnail {
+    width: 250px;
+    height: 250px;
+}
+/*padding for container in the title section*/
+#containerTitleSection {
+    /* 3% padding to the top and bottom and 15% to the left and right*/
+    padding: 3% 10%;
+    padding-top: 4.5rem;
+}
+
+#titleSection h1 {
+    padding: 3%;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-style: italic;
+}
+
+.button-download {
+    margin-bottom: 5%;
+    margin-left: 3%;
+}
+
+
+
+/*change the size of the images if mobile screen*/
+@media screen and (max-width: 576px) {
+    .img-thumbnail{
+        width: 180px;
+        height: 180px;
+    }
+    .introImg2{
+        width: 180px;
+        height: 180px;
+    }
+    #titleSection h1  {
+        text-align: center;
+    }
+}
+
+/*Description section*/
+/*padding for container in the title section*/
+#containerDescriptionSection {
+    /* 3% padding to the top and bottom and 15% to the left and right*/
+    padding: 3% 10%;
+    padding-top: 4.5rem;
+    padding-bottom: 4.5rem;
+}
+.descriptionHeader {
+    font-family: 'Ubuntu', sans-serif;
+    text-align: center;
+}
+#rowWithFeatures {
+    padding-top: 4.5rem;
+    text-align: center;
+}
+#rowWithFeatures h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+#rowWithFeatures p {
+    color: #8f8f8f;
+}
+.classSymbol {
+    color: #ef8172;
+    font-size: 3.5rem;
+    padding-bottom: 1rem;
+}
+.classSymbol:hover {
+    color: #ff4c68;
+}
+
+/*Carousel section*/
+#carouselSectionWithHighlights {
+    /*background-color: #01FF70;*/
+    /*background-color: #ff4c68;
+    color: #fff; */
+    text-align: center;
+}
+
+
+#carouselMainPage {
+    padding: 3%;
+    text-align: center;
+    padding-top: 0%;
+}
+
+#introCarouselSection {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 4.5rem;
+    text-align: center;
+    padding-top: 1.5rem;
+}
+
+.carousel-inner {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 2.5rem;
+    text-align: center;
+}
+.carousel-inner h5 {
+    font-weight: 900;
+    font-size: 5rem;
+}
+
+.carousel img {
+    max-height: 400px;
+    margin: 0 auto;
+}
+/*change the size of the images if mobile screen*/
+@media screen and (min-width: 768px) {
+    .carousel img {
+        max-height: 600px;
+        margin: 0 auto;
+    }
+}
+
+
+
+.dark-mode-red-section {
+    background-color: #7f7f7f;
+    color: #AAB8C2;
+}
+
+.dark-mode-white-section {
+    background-color: black;
+    color: white;
+}
+
+
+
+
+
+
+
+/*change the size of the images if mobile screen*/
+@media screen and (min-width: 992px) {
+    .carousel img {
+        max-height: 850px;
+        margin: 0 auto;
+    }
+}
+
+/*Footer*/
+footer {
+    font-size: 1rem;
+    font-family: "Ubuntu";
+    font-weight: bold;
+    padding-top: 2rem;
+}
+
+footer ul li a {
+    text-decoration: none;
+}
+
+#authors {
+    text-decoration: none;
+}

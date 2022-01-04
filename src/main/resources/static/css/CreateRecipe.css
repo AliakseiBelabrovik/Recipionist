@@ -1,0 +1,167 @@
+
+/**Some Css for navbar **/
+.navbar {
+    font-size: 1rem;
+    font-family: "Ubuntu";
+    font-weight: bold;
+}
+/**Some Css for Brand Name **/
+.navbar-brand{
+    font-size: 2.5rem;
+    font-family: "Ubuntu";
+    font-weight: bold;
+}
+/*Font for the text after the navbar brand*/
+nav span {
+    font-size: 1.25rem;
+    font-family: "Ubuntu";
+    font-weight: bold;
+}
+.logoClass {
+    color: #FFDC00;
+}
+
+/* Montserrat font for the main content*/
+main {
+    font-family: "Montserrat", sans-serif;
+}
+
+/**
+Background and text color to the title section
+ */
+.red-section {
+    /*background-color: #01FF70;*/
+    background-color: #ff4c68;
+    color: #fff;
+}
+
+.outer-container {
+    padding: 3% 10%;
+}
+#first-outer-container {
+    padding-top: 4.5rem;
+}
+
+.inner-container {
+    padding: 3% 10%;
+    padding-top: 1.5rem;
+
+}
+#create-recipe-inner-section {
+    padding-bottom: 4.5rem;
+}
+
+
+.dark-mode-red-section {
+    background-color: #7f7f7f;
+    color: #AAB8C2;
+}
+
+.dark-mode-white-section {
+    background-color: black;
+    color: white;
+}
+
+#customFile {
+    max-width: 350px;
+}
+#firstRowAfterIntro {
+
+}
+.name-for-form-attribute {
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+#intro{
+    font-weight: 900;
+    font-size: 2rem;
+    padding-bottom: 1.5rem;
+}
+
+#areaRow {
+    padding-bottom: 1.5rem;
+}
+#glassRow {
+    padding-bottom: 1.5rem;
+}
+#alcoholRow {
+    padding-bottom: 1.5rem;
+}
+#textRecipeName{
+    padding-bottom: 1.5rem;
+    color: #8f8f8f;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-style: italic;
+}
+
+#textRecipe{
+    padding-bottom: 1.5rem;
+    color: #8f8f8f;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-style: italic;
+    height: 200px;
+}
+#instructions {
+    height: auto;
+    max-height: 200px;
+    min-height: 75px;
+}
+
+
+#textCategory{
+    padding-bottom: 1.5rem;
+    color: #8f8f8f;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-style: italic;
+}
+
+#button{
+    text-align: center;
+    padding-top: 1.5rem;
+}
+
+/*padding for container in the title section*/
+
+#uploadImage {
+    padding-bottom: 24px;
+}
+
+th {
+    color: white;
+}
+
+/*Description section*/
+/*padding for container in the title section*/
+#containerDescriptionSection {
+    /* 3% padding to the top and bottom and 15% to the left and right*/
+    padding: 3% 10%;
+    padding-top: 4.5rem;
+    padding-bottom: 4.5rem;
+}
+
+.descriptionHeader {
+    font-family: 'Ubuntu', sans-serif;
+    text-align: center;
+}
+main h3 {
+    font-family: 'Ubuntu', sans-serif;
+}
+
+/*Footer*/
+footer {
+    font-size: 1rem;
+    font-family: "Ubuntu";
+    font-weight: bold;
+    padding-top: 2rem;
+}
+
+footer ul li a {
+    text-decoration: none;
+}
+
+#authors {
+    text-decoration: none;
+}

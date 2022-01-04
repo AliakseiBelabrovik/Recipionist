@@ -1,0 +1,192 @@
+.navbar {
+    font-size: 1rem;
+    font-family: "Ubuntu";
+    font-weight: bold;
+}
+
+/**Some Css for Brand Name **/
+.navbar-brand{
+    font-size: 2.5rem;
+    font-family: "Ubuntu";
+    font-weight: bold;
+}
+/*Font for the text after the navbar brand*/
+nav span {
+    font-size: 1.25rem;
+    font-family: "Ubuntu";
+    font-weight: bold;
+}
+.logoClass {
+    color: #FFDC00;
+}
+
+
+/* Montserrat font for the main content*/
+main {
+    font-family: "Montserrat", sans-serif;
+}
+
+
+
+
+/*         Search Section                                                  */
+/**
+
+/*padding for container in the title section*/
+#searchBarSection {
+    /* 3% padding to the top and bottom and 15% to the left and right*/
+    padding: 3% 10%;
+    padding-top: 4.5rem;
+}
+#containerSearchSection {
+
+}
+.red-section {
+    background-color: #ff4c68;
+    color: #fff;
+}
+
+#searchBarSection h1 {
+    font-family: 'Ubuntu', sans-serif;
+    text-align: center;
+    font-size: 3rem;
+    padding-bottom: 3%;
+}
+#show-buttons {
+    padding: 3% 10%;
+}
+#btn-show-ingredients {
+    padding-left: 3%;
+    padding-right: 3%;
+    margin-left: 3%;
+    margin-right: 3%;
+}
+
+#btn-show-categories {
+    padding-right: 3%;
+    margin-right: 3%;
+}
+#btn-show-areas {
+    padding-left: 3%;
+    margin-left: 3%;
+}
+
+#rowWithFeatures {
+    padding-top: 4.5rem;
+    text-align: center;
+}
+#searchBarSection p {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: #fff;
+    padding-bottom: 3%;
+}
+#mainContainerDetailed h3{
+    padding-top: 1.5rem;
+}
+#select-search-option {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+#select-categories-area-option {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+
+}
+
+#label-for-select-option {
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+/* Section with photos */
+#photoSection {
+   /* background-color: #ff4c68; */
+    padding-top: 4.5rem;
+}
+.card-body {
+    background-color: #ff4c68;
+    color: #ffff;
+}
+small {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: #ffff;
+}
+.headerPhotoSection {
+    font-family: 'Ubuntu', sans-serif;
+    text-align: center;
+    font-size: 3rem;
+}
+
+
+
+.dark-mode-red-section {
+    background-color: #7f7f7f;
+    color: #AAB8C2;
+}
+
+.dark-mode-white-section {
+    background-color: black;
+    color: white;
+}
+
+#header-for-option-category-area {
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+
+
+/* size of the images in header*/
+/*
+.img-thumbnail {
+    width: 250px;
+    height: 250px;
+}
+
+*/
+
+/*change the size of the images if mobile screen*/
+/*
+@media screen and (max-width: 576px) {
+    .img-thumbnail{
+        width: 180px;
+        height: 180px;
+    }
+    .introImg2{
+        width: 180px;
+        height: 180px;
+    }
+}
+
+*/
+
+
+
+
+
+
+/*Footer*/
+footer {
+    font-size: 1rem;
+    font-family: "Ubuntu";
+    font-weight: bold;
+    padding-top: 2rem;
+}
+
+footer ul li a {
+    text-decoration: none;
+}
+
+#authors {
+    text-decoration: none;
+}
