@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -45,7 +47,7 @@ public class Meal {
     protected String mealName;
 
     //TODO Outsource in MealArea Klasse with annotation Embedded and Embeddable
-    @Column(name = "area", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "area", columnDefinition = "TEXT")
     protected String area;
 
     @Column(name = "thumbnail", columnDefinition = "TEXT")
@@ -63,8 +65,7 @@ public class Meal {
 
 
     @ManyToOne(
-            //cascade = CascadeType.ALL,
-            optional = false
+            //optional = false
     )
     @JoinColumn(
             name = "meal_category_id", //column in meals
@@ -72,9 +73,22 @@ public class Meal {
     )
     protected MealCategory mealCategory;
 
+    public MealCategory getMealCategory() {
+        return mealCategory;
+    }
+
+    public void setMealCategory(MealCategory mealCategory) {
+        setMealCategory(mealCategory, true);
+    }
+    public void setMealCategory(MealCategory mealCategory, boolean add) {
+        this.mealCategory = mealCategory;
+        if (mealCategory != null && add) {
+            mealCategory.addMeal(this, false);
+        }
+    }
+
     @ManyToOne(
-            //cascade = CascadeType.ALL,
-            optional = false
+            //optional = false
     )
     @JoinColumn(
             name = "user_id", //column in meals
@@ -82,17 +96,64 @@ public class Meal {
     )
     private User user;
 
+    public void setUser(User user) {
+        setUser(user, true);
+    }
+
+    public void setUser(User user, boolean add) {
+        this.user = user;
+        if (user != null && add) {
+            user.addMeal(this, false);
+        }
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    @Fetch(FetchMode.JOIN)
     @OneToMany(
+            //cascade = CascadeType.ALL,
             mappedBy = "meal"
     )
     private List<MealIngredient> mealIngredients;
 
+
     public void addMealIngredient(MealIngredient mealIngredient) {
+        addMealIngredient(mealIngredient, true);
+    }
+
+    public void addMealIngredient(MealIngredient mealIngredient, boolean set) {
         if (mealIngredients == null) {
             mealIngredients = new ArrayList<>();
         }
-        mealIngredients.add(mealIngredient);
+        if (mealIngredient != null) {
+            if (this.getMealIngredients().contains(mealIngredient)) {
+                this.getMealIngredients().set(this.getMealIngredients().indexOf(mealIngredient), mealIngredient);
+            } else {
+                this.getMealIngredients().add(mealIngredient);
+            }
+            if (set) {
+                mealIngredient.setMeal(this, false);
+            }
+        }
     }
+
+
+    public void removeIngredient(MealIngredient mealIngredient) {
+        this.getMealIngredients().remove(mealIngredient);
+        mealIngredient.setMeal(null);
+    }
+
+
+    public List<MealIngredient> getMealIngredients() {
+        return mealIngredients;
+    }
+
+    public void setMealIngredients(List<MealIngredient> mealIngredients) {
+        this.mealIngredients = mealIngredients;
+    }
+
     /**
      * Ändern!! Als Relationships darstellen!!!!
      */

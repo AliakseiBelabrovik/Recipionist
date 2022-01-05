@@ -14,4 +14,5 @@ public interface IngredientRepository extends JpaRepository<Ingredient, Long> {
     Optional<Ingredient> findIngredientByIngredientName(String ingredientName);
 
 
+
 }

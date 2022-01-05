@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -39,28 +41,26 @@ public class MealCategory {
     @Column(name = "id", updatable = false)
     protected Long id;
 
-    @Column(name = "name", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "name", columnDefinition = "TEXT")
     protected String categoryName;
 
-    @Column(name = "thumbnail", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "thumbnail", columnDefinition = "TEXT")
     protected String thumbnail;
 
-    @Column(name = "description", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "description", columnDefinition = "TEXT")
     protected String description;
 
     @Column(name = "area", columnDefinition = "TEXT")
     protected String strArea;
 
+    @Fetch(FetchMode.JOIN)
     @OneToMany(
+            cascade = CascadeType.ALL,
             mappedBy = "mealCategory")
     private List<Meal> meals;
 
-    public void addMeal(Meal meal) {
-        if (meals == null) {
-            meals = new ArrayList<>();
-        }
-        meals.add(meal);
-    }
+
+
 
 
     public MealCategory(String category, String thumbnail, String description, String strArea) {
@@ -77,6 +77,39 @@ public class MealCategory {
         this.description = description;
         this.strArea = strArea;
     }
+
+    public void addMeal(Meal meal) {
+        addMeal(meal, true);
+    }
+
+    public void addMeal(Meal meal, boolean set) {
+        if (meals == null) {
+            meals = new ArrayList<>();
+        }
+        if (meals != null) {
+            if (this.getMeals().contains(meal)) {
+                this.getMeals().set(this.getMeals().indexOf(meal), meal);
+            } else {
+                this.getMeals().add(meal);
+            }
+            if (set) {
+                meal.setMealCategory(this, false);
+            }
+        }
+    }
+    public void removeMeal(Meal meal) {
+        this.getMeals().remove(meal);
+        meal.setMealCategory(null);
+    }
+
+    public List<Meal> getMeals() {
+        return meals;
+    }
+
+    public void setMeals(List<Meal> meals) {
+        this.meals = meals;
+    }
+
 
 
     public void setCategory(String category) {

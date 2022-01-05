@@ -17,7 +17,8 @@ class MealIngredientRepositoryTest {
 
     @Autowired
     MealIngredientService mealIngredientService;
-
+    @Autowired
+    MealIngredientRepository mealIngredientRepository;
     @Autowired
     MealCategoryService mealCategoryService;
     @Autowired
@@ -29,6 +30,63 @@ class MealIngredientRepositoryTest {
 
     @Autowired
     IngredientRepository ingredientRepository;
+
+
+    @Test
+    public void saveMealIngredient() {
+        /*
+        Ingredient ingredient1 = Ingredient.builder()
+                .ingredientName("Lemon")
+                .build();
+        Ingredient ingredient2 = Ingredient.builder()
+                .ingredientName("Pesto")
+                .build();
+        Ingredient ingredient3 = Ingredient.builder()
+                .ingredientName("Salt")
+                .build();
+        Ingredient ingredient4 = Ingredient.builder()
+                .ingredientName("Paprika")
+                .build();
+
+        ingredientService.addNewIngredientToDatabase(ingredient1);
+        ingredientService.addNewIngredientToDatabase(ingredient2);
+        ingredientService.addNewIngredientToDatabase(ingredient3);
+        ingredientService.addNewIngredientToDatabase(ingredient4);
+
+
+         */
+        Ingredient ingredient1 = ingredientRepository.findIngredientByIngredientName("Lemon").get();
+        Ingredient ingredient2 = ingredientRepository.findIngredientByIngredientName("Pesto").get();
+        Ingredient ingredient3 = ingredientRepository.findIngredientByIngredientName("Salt").get();
+        Ingredient ingredient4 = ingredientRepository.findIngredientByIngredientName("Paprika").get();
+
+
+        MealIngredient mealIngredient1 = MealIngredient.builder()
+                .ingredient(ingredient1)
+                .measure("55 pieces")
+                .build();
+        MealIngredient mealIngredient2 = MealIngredient.builder()
+                .ingredient(ingredient2)
+                .measure("55 g")
+                .build();
+        MealIngredient mealIngredient3 = MealIngredient.builder()
+                .ingredient(ingredient3)
+                .measure("55 g")
+                .build();
+        MealIngredient mealIngredient4 = MealIngredient.builder()
+                .ingredient(ingredient4)
+                .measure("55 g")
+                .build();
+
+        mealIngredientRepository.save(mealIngredient1);
+        mealIngredientRepository.save(mealIngredient2);
+        mealIngredientRepository.save(mealIngredient3);
+        mealIngredientRepository.save(mealIngredient4);
+
+
+
+    }
+
 
 
     @Test

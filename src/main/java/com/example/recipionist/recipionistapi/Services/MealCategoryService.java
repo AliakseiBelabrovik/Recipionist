@@ -27,6 +27,11 @@ public class MealCategoryService {
     }
 
 
+    public MealCategory getMealCategoryById(Long id) {
+        return mealCategoryRepository.findById(id).get();
+    }
+
+
     public List<MealCategory> getAllCategoriesFromDatabase() {
         return mealCategoryRepository.findAll();
     }

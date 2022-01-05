@@ -24,6 +24,13 @@ public class MealIngredientService {
         return mealIngredientRepository.findAll();
     }
 
+    public MealIngredient getMealIngredientById(Long id) {
+        return mealIngredientRepository.findById(id).get();
+    }
+
+
+
+
     public void addNewMealIngredientToDatabase(MealIngredient mealIngredient) {
 
         /*
@@ -37,7 +44,8 @@ public class MealIngredientService {
             throw new IllegalStateException("MealIngredient exists");
         }
         System.out.println("Adding new mealIngredient " + mealIngredient);
-        */
+
+         */
         mealIngredientRepository.save(mealIngredient);
     }
 

@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -41,29 +43,50 @@ public class Ingredient {
     @Column(name = "name", nullable = false, columnDefinition = "TEXT")
     private String ingredientName;
 
-    /*
+
     //TODO Add OneToMany Relationship with mappedBY attributes from MealIngredient and CocktailIngredient classes
+    @Fetch(FetchMode.JOIN)
     @OneToMany(
+            cascade = CascadeType.ALL,
             mappedBy = "ingredient"
     )
     private List<MealIngredient> mealIngredients;
 
     public void addMealIngredient(MealIngredient mealIngredient) {
+        addMealIngredient(mealIngredient, true);
+    }
+
+
+    public void addMealIngredient(MealIngredient mealIngredient, boolean set) {
         if (mealIngredients == null) {
             mealIngredients = new ArrayList<>();
         }
-        mealIngredients.add(mealIngredient);
+        if (mealIngredient != null) {
+            if (this.getMealIngredients().contains(mealIngredient)) {
+                this.getMealIngredients().set(this.getMealIngredients().indexOf(mealIngredient), mealIngredient);
+            } else {
+                this.getMealIngredients().add(mealIngredient);
+            }
+            if (set) {
+                mealIngredient.setIngredient(this, false);
+            }
+        }
+    }
+    public void removeIngredient(MealIngredient mealIngredient) {
+        this.getMealIngredients().remove(mealIngredient);
+        mealIngredient.setIngredient(null);
     }
 
-     */
 
-    public Long getId() {
-        return id;
+    public List<MealIngredient> getMealIngredients() {
+        return mealIngredients;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setMealIngredients(List<MealIngredient> mealIngredients) {
+        this.mealIngredients = mealIngredients;
     }
+
+
 
     public String getIngredientName() {
         return ingredientName;
@@ -71,5 +94,13 @@ public class Ingredient {
 
     public void setIngredientName(String ingredientName) {
         this.ingredientName = ingredientName;
+    }
+
+    @Override
+    public String toString() {
+        return "Ingredient{" +
+                "id=" + id +
+                ", ingredientName='" + ingredientName + '\'' +
+                '}';
     }
 }
