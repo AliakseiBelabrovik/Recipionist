@@ -1,13 +1,7 @@
-import {triggerDetailedMealSearch} from "./SearchRecipes";
-
-
-
-class ContentCreation {
-
+export default class ContentCreation {
     constructor() {
 
     }
-
 
     //for each result, create a bootstrap card
     createCardWithResult(singleResult) {
@@ -65,10 +59,13 @@ class ContentCreation {
         btnView.id = singleResult.id; //give the button the same id as the id of the short meal recipe
         btnView.innerText = "View";
 
+        //let thisObject = this;
+
         btnView.addEventListener("click", function (event) {
             event.preventDefault();
             //resultOfShortSearch.deleteAllElementsFromList();
             //resultOfShortSearch.removeResultsOnScreen();
+            //thisObject.triggerDetailedMealSearch("id/" + btnView.id);
             triggerDetailedMealSearch("id/" + btnView.id);
         });
 
@@ -104,8 +101,8 @@ class ContentCreation {
 
     }
 
-
 }
+
 
 
 

@@ -1,4 +1,9 @@
+import ContentCreation from './contentCreation.js';
+
 document.addEventListener("DOMContentLoaded", function (event) {
+
+
+    //import ContentCreation from "./contentCreation";
 
     /**
      * Class with functions to display and delete HTML elements (search results) on the page
@@ -8,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
             this.listOfResults = [];
             this.mainRow = document.querySelector(".row-photo-section"); //row from bootstrap
             this.listOfDisplayedResults = [];
-            this.contenCreator = new ContentCreation();
+            this.contenCreator = new ContentCreation;
         }
 
         //display all the results on the screen
@@ -691,5 +696,5 @@ document.addEventListener("DOMContentLoaded", function (event) {
     let resultOfDetailedSearch = new DisplayedDetailedResult();
     let resultOfCategorySearch = new DisplayedCategories();
 
-
 });
+
