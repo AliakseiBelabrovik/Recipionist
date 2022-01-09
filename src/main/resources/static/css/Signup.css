@@ -6,8 +6,17 @@
     height: 100%;
     display: flex;
     align-items: center;
+    /*
     padding-top: 40px;
     padding-bottom: 40px;
+
+     */
+    /* 3% padding to the top and bottom and 15% to the left and right*/
+
+    padding: 3% 10%;
+    padding-top: 4.5rem;
+
+
 }
 
 .form-signin {
@@ -126,7 +135,7 @@ Background and text color to the title section
 
 .red-section {
     background-color: #ff4c68;
-    color: #fff;
+    color: black;
 }
 
 .dark-mode-red-section {
@@ -146,12 +155,6 @@ Background and text color to the title section
 .img-thumbnail {
     width: 250px;
     height: 250px;
-}
-/*padding for container in the title section*/
-#sectionSignIn {
-    /* 3% padding to the top and bottom and 15% to the left and right*/
-    padding: 3% 10%;
-    padding-top: 4.5rem;
 }
 
 
@@ -197,3 +200,24 @@ footer ul li a {
     color: #AAB8C2;
 }
 
+/*CSS for SingUp from the internet ##################################################################### */
+.gradient-custom-3 {
+    /* fallback for old browsers */
+    background: #84fab0;
+
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right, rgba(132, 250, 176, 0.5), rgba(143, 211, 244, 0.5));
+
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to right, rgba(132, 250, 176, 0.5), rgba(143, 211, 244, 0.5))
+}
+.gradient-custom-4 {
+    /* fallback for old browsers */
+    background: #84fab0;
+
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right, rgba(132, 250, 176, 1), rgba(143, 211, 244, 1));
+
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to right, rgba(132, 250, 176, 1), rgba(143, 211, 244, 1))
+}

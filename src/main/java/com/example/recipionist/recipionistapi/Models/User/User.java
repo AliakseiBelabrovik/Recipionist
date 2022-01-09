@@ -1,17 +1,20 @@
 package com.example.recipionist.recipionistapi.Models.User;
 
 import com.example.recipionist.recipionistapi.Models.Meals.Meal;
-import com.example.recipionist.recipionistapi.Models.Meals.MealIngredient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 //to map the User class with the database
@@ -27,7 +30,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class User {
+public class User implements UserDetails {
 
     @Id //For database
     @SequenceGenerator( //to make it BIGSERIAL and create sequence
@@ -48,11 +51,21 @@ public class User {
     @Column(name = "last_name", nullable = false, columnDefinition = "TEXT")
     private String lastName;
 
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole; // to manage roles
+
+
     @Column(name = "email", nullable = false, columnDefinition = "TEXT")
     private String email;
 
     @Column(name = "password", nullable = false, columnDefinition = "TEXT")
     private String password;
+
+
+    private Boolean locked = false; //default values for this boolean variables
+    //set to true, after the user confirmed his email
+    private Boolean enabled = false;
+
 
     @Fetch(FetchMode.JOIN)
     @OneToMany(
@@ -84,6 +97,23 @@ public class User {
         this.getMeals().remove(meal);
         meal.setUser(null);
     }
+
+    public User(String firstName,
+                String lastName,
+                UserRole userRole,
+                String email,
+                String password,
+                Boolean locked,
+                Boolean enabled,
+                List<Meal> meals) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.userRole = userRole;
+        this.email = email;
+        this.password = password;
+        this.meals = meals;
+    }
+
 
 
     public List<Meal> getMeals() {
@@ -126,13 +156,50 @@ public class User {
         this.email = email;
     }
 
+
+    /**
+     * Methods from Spring Security (UserDetails interface)
+     * @return
+     */
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(userRole.name());
+        return Collections.singletonList(authority);
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    //username is email
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true; //we don't manage this
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !locked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true; //we don't manage this
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
+
 
 
     @Override

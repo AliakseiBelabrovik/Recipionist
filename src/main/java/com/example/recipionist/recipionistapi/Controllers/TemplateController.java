@@ -1,7 +1,10 @@
 package com.example.recipionist.recipionistapi.Controllers;
 
 
+import com.example.recipionist.recipionistapi.Models.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -39,6 +42,10 @@ public class TemplateController {
     public String goToCreateRecipe() {
         return "session/CreateRecipe";
     }
+    @RequestMapping("session/signup")
+    public String goToSingUpPage(){
+        return "session/Signup";
+    }
 
     @RequestMapping()
     public String gotMMM() {
@@ -63,6 +70,25 @@ public class TemplateController {
         String data = restTemplate.getForObject(weatherUrl, String.class);
         return data;
     }
+
+    @RequestMapping(path = "/session/currentuser", method = RequestMethod.GET)
+    public String checkCurrentUser() {
+        /*
+        AbstractAuthenticationToken auth =
+                (AbstractAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+
+
+        User currentUser = (User) auth.getDetails();
+
+         */
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println("currentUser = " + currentUser);
+        System.out.println("name = " + currentUser.getFirstName());
+        return currentUser.getFirstName();
+    }
+
+
+
 
 
 }

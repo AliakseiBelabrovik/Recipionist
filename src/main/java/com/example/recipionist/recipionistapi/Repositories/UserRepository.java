@@ -2,7 +2,6 @@ package com.example.recipionist.recipionistapi.Repositories;
 
 import com.example.recipionist.recipionistapi.Models.User.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -25,6 +24,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
             value = "UPDATE users SET first_name = ?1 WHERE email = ?2"
     )
     int updateStudentNameByEmail(String firstName, String email);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE users u SET u.enabled = TRUE WHERE u.email = ?1")
+    int enableUser(String email);
 
     /*
     @Query(

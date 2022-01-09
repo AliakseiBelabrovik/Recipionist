@@ -13,7 +13,7 @@ public class PasswordConfig {
 
     //An interface to encode passwords
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
 

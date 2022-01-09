@@ -3,6 +3,7 @@ package com.example.recipionist.recipionistapi.Controllers;
 import com.example.recipionist.recipionistapi.Models.User.User;
 import com.example.recipionist.recipionistapi.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    /*
     @GetMapping(path ="test")
     public List<User> getUsers() {
         User user1 = User.builder()
@@ -38,7 +40,14 @@ public class UserController {
         //User user2 = new User("Papa", "Roach", "hahaaaa@example.com", "dfsfsdf");
         userService.addNewUser(user1);
         userService.addNewUser(user2);
+
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication();
+
         return userService.getAllUsers();
+
+
     }
+ */
+
 
 }
