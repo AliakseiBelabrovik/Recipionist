@@ -5,7 +5,7 @@ import com.example.recipionist.recipionistapi.Registration.token.ConfirmationTok
 import com.example.recipionist.recipionistapi.Registration.token.ConfirmationTokenService;
 import com.example.recipionist.recipionistapi.Repositories.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -40,6 +40,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
+    /*
     public void addNewUser(User user) {
 
         Optional<User> userOptional = userRepository.findUserByEmail(user.getEmail());
@@ -53,6 +54,8 @@ public class UserService implements UserDetailsService {
 
         userRepository.save(user);
     }
+
+     */
 
     public void deleteUser(Long id) {
         boolean exists = userRepository.existsById(id);
@@ -126,5 +129,11 @@ public class UserService implements UserDetailsService {
         return userRepository.enableUser(email);
     }
 
+    public User getCurrentUser() {
+
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        currentUser = userRepository.findById(currentUser.getId()).get();
+        return currentUser;
+    }
 
 }

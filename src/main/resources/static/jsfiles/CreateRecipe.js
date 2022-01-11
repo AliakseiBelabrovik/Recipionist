@@ -668,7 +668,7 @@
 
                 //chooses the route depending on the selected value
                 if (selectMealOrCocktail.value === "deleteCocktail") {
-                    xhttp.open("DELETE","/api/cocktails/meals/delete/" + document.getElementById("id").value ,true);
+                    xhttp.open("DELETE","/api/recipionist/cocktails/delete/" + document.getElementById("id").value ,true);
                 } else {
                     xhttp.open("DELETE","/api/recipionist/meals/delete/" + document.getElementById("id").value ,true);
                 }

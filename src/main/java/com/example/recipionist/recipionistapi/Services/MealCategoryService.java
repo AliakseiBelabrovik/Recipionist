@@ -36,6 +36,13 @@ public class MealCategoryService {
         return mealCategoryRepository.findAll();
     }
 
+    public MealCategory getMealCategoryByName(String categoryName) {
+        Optional<MealCategory> optionalMealCategory =
+                mealCategoryRepository.findMealCategoryByCategoryName(categoryName);
+        return optionalMealCategory
+                .orElseThrow(() -> new IllegalStateException("No category with name " + categoryName + " was found."));
+    }
+
     public void addNewMealCategoryInDatabase(MealCategory mealCategory) {
 
         Optional<MealCategory> mealCategoryOptional =

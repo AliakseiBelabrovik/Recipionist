@@ -1,22 +1,122 @@
 package com.example.recipionist.recipionistapi.Services;
 
 import com.example.recipionist.recipionistapi.DataLoader;
-import com.example.recipionist.recipionistapi.Models.Meals.Meal;
-import com.example.recipionist.recipionistapi.Models.Meals.MealsObjects;
-import com.example.recipionist.recipionistapi.Models.Meals.ShortMeal;
+import com.example.recipionist.recipionistapi.Models.Ingredient.Ingredient;
+import com.example.recipionist.recipionistapi.Models.Meals.*;
+import com.example.recipionist.recipionistapi.Models.User.User;
+import com.example.recipionist.recipionistapi.Repositories.MealRepository;
+import lombok.AllArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
+@AllArgsConstructor
 public class MealService {
 
     DataLoader dataLoader = new DataLoader();
     MealsObjects localMeals = new MealsObjects();
+    MealRepository mealRepository;
+    IngredientService ingredientService;
+    MealCategoryService mealCategoryService;
+    UserService userService;
+    MealIngredientService mealIngredientService;
+
+    /**
+     * Section we new methods to work with the database
+     */
+
+    public Meal addNewMealToDatabase(Meal meal) {
+
+        //check fist if meal is already present TODO: check not only by name, but also by user, because
+        //TODO: many users can have their own recipes with the same name
+        Optional<Meal> optionalMeal = mealRepository.findByMealName(meal.getMealName());
+        if (optionalMeal.isPresent()) {
+            System.out.println("optionalMeal = " + optionalMeal + " is already present in the database.");
+            return optionalMeal.get();
+        }
+        //otherwise
+
+
+
+
+        //then save mealCategory
+        MealCategory mealCategory;
+        try {
+            mealCategory = mealCategoryService.getMealCategoryByName(meal.getCategory());
+        } catch (IllegalStateException exception) {
+            mealCategory = MealCategory.builder()
+                    .categoryName(meal.getCategory())
+                    .build();
+            mealCategoryService.addNewMealCategoryInDatabase(mealCategory);
+        }
+        //TODO: do not forget to add meal to list in mealcategories
+        //TODO: do not forget to add mealCategory to the meal
+
+        User currentUser = userService.getCurrentUser();
+        //for consistence, because bidirectional relationships
+        meal.setMealCategory(mealCategory);
+        meal.setUser(currentUser);
+
+        //TODO: do not forget to add meal to user
+
+
+
+
+        //save Ingredient and then mealIngredient first
+        for (int i= 0; i < meal.getIngredients().size(); i++) {
+            Ingredient ingredient = Ingredient.builder()
+                    .ingredientName(meal.getIngredients().get(i))
+                    .build();
+            try {
+                ingredientService.addNewIngredientToDatabase(ingredient);
+            } catch (IllegalStateException exception) {
+                ingredient = ingredientService.getIngredientFromDatabaseByName(ingredient.getIngredientName());
+            }
+
+            //TODO: do not forget to add mealIngredient later
+
+            MealIngredient mealIngredient = MealIngredient.builder()
+                    .measure(meal.getMeasures().get(i))
+                    .ingredient(ingredient)
+                    //.ingredient(ingredientService.getIngredientFromDatabaseByName(meal.getIngredients().get(i)))
+                    .build();
+            mealIngredientService.addNewMealIngredientToDatabase(mealIngredient);
+
+            ingredient.addMealIngredient(mealIngredient);
+
+            //TODO: try this
+            //mealIngredient.setMeal(meal);
+
+            meal.addMealIngredient(mealIngredient);
+
+            //TODO: not forget to set meal later
+        }
+
+        //mealCategory.addMeal(meal);
+        currentUser.addMeal(meal);
+
+        mealRepository.save(meal);
+        //Maybe better to save user???
+        //don't forget to update bidirectional relationships
+
+
+        //TODO save mealIngredient again, to update meal_id column (and many ingredient_id column)
+
+
+        return meal;
+    }
+
+    /**
+     * Section with methods for database ends here
+     */
+
+
 
 
     public Meal getSingleMeal(String data){

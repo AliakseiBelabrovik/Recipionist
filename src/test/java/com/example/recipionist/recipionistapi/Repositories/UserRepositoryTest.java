@@ -25,7 +25,7 @@ class UserRepositoryTest {
     MealRepository mealRepository;
 
 
-
+    /*
     @Test
     public void addNewUsers() {
         User user1 = User.builder()
@@ -46,6 +46,8 @@ class UserRepositoryTest {
         userService.addNewUser(user2);
     }
 
+
+     */
 
     @Test
     public void getUsers() {
@@ -90,7 +92,7 @@ class UserRepositoryTest {
         List<Meal> meals = user.getMeals();
         //String area = meals.get(1).getArea();
         System.out.println("meals = " + meals);
-        Meal meal = mealRepository.findByMealName("SantaMeal");
+        Meal meal = mealRepository.findByMealName("SantaMeal").get();
         System.out.println("meal = " + meal);
         
         

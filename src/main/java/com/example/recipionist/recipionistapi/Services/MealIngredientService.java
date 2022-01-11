@@ -25,27 +25,15 @@ public class MealIngredientService {
     }
 
     public MealIngredient getMealIngredientById(Long id) {
+        //TODO: handling if no ingredient found
         return mealIngredientRepository.findById(id).get();
     }
 
 
 
-
     public void addNewMealIngredientToDatabase(MealIngredient mealIngredient) {
 
-        /*
-        Optional<MealIngredient> mealIngredientOptional =
-                mealIngredientRepository.findByIngredientAndMeal( mealIngredient.getIngredient(),
-                        mealIngredient.getMeal() );
 
-        System.out.println("Optional mealIngredient is " + mealIngredientOptional);
-        if (mealIngredientOptional.isPresent()) {
-            System.out.println("MealIngredient exists " + mealIngredientOptional);
-            throw new IllegalStateException("MealIngredient exists");
-        }
-        System.out.println("Adding new mealIngredient " + mealIngredient);
-
-         */
         mealIngredientRepository.save(mealIngredient);
     }
 

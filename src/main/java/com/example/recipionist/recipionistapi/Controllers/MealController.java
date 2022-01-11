@@ -126,8 +126,10 @@ public class MealController {
     public Meal createMeal(
            Meal meal
             ) {
-        Meal mealResult = mealService.saveMeal(meal);
         System.out.println(meal);
+        //Meal mealResult = mealService.saveMeal(meal);
+        Meal mealResult = mealService.addNewMealToDatabase(meal);
+        System.out.println(mealResult);
         return mealResult;
     }
 

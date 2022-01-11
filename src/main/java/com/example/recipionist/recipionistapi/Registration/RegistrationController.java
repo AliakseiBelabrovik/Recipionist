@@ -16,7 +16,9 @@ public class RegistrationController {
     //we take information (see RegistrationRequest) to register a person
     @RequestMapping(method = RequestMethod.POST)
     public String register(@RequestBody RegistrationRequest request){
-        return registrationService.register(request);
+        //return registrationService.register(request);
+        registrationService.register(request);
+        return "redirect:/main";
     }
 
     //we send token as parameter token?=xxxxxx

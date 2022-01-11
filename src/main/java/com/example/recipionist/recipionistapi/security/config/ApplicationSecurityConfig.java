@@ -40,7 +40,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 //all users must be able to reach the following pages
-                    .antMatchers("/", "/session/signup","/main", "/recipes", "/cocktails", "/css/*", "/jsfiles/*", "/images/*", "/api/**", "/static/**", "weather", "/registration/**").permitAll()
+                    .antMatchers("/session/login", "/", "/session/signup","/main", "/recipes", "/cocktails", "/css/*", "/jsfiles/*", "/images/*", "/api/**", "/static/**", "weather", "/registration/**", "/session/signup**").permitAll()
                     .anyRequest()
                     .authenticated()
                 .and()

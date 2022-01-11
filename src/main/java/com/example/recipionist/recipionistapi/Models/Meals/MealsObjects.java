@@ -1,10 +1,12 @@
 package com.example.recipionist.recipionistapi.Models.Meals;
 
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
+@Service
 public class MealsObjects {
 
     protected ArrayList<Meal> mealsLocal;

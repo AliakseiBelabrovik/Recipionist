@@ -21,7 +21,6 @@ import java.util.List;
                 columnNames = "name"
         )
 )
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

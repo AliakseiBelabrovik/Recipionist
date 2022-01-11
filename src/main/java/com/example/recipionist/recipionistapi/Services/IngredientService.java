@@ -24,6 +24,14 @@ public class IngredientService {
         return ingredientRepository.findAll();
     }
 
+    public Ingredient getIngredientFromDatabaseByName(String name) {
+
+        //TODO: should ignore uppercase/lowercase?
+        Optional<Ingredient> optionalIngredient = ingredientRepository.findIngredientByIngredientName(name);
+        return optionalIngredient.orElse(null);
+    }
+
+
     public void addNewIngredientToDatabase(Ingredient ingredient) {
 
         Optional<Ingredient> ingredientOptional =
@@ -35,8 +43,6 @@ public class IngredientService {
             throw new IllegalStateException("Ingredient name taken");
         }
         System.out.println("Adding new ingredient " + ingredient);
-
-
         ingredientRepository.save(ingredient);
     }
 
