@@ -145,7 +145,8 @@ public class MealController {
     @RequestMapping(value = "/api/recipionist/meals/delete/{id}", method = RequestMethod.DELETE)
     @ResponseBody
     public boolean deleteMeal( @PathVariable String id) {
-        return mealService.deleteMeal(id);
+        //return mealService.deleteMeal(id);
+        return mealService.deleteMealFromDatabase(Long.parseLong(id));
     }
 
 

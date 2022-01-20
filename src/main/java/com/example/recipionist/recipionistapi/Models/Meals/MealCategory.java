@@ -1,5 +1,9 @@
 package com.example.recipionist.recipionistapi.Models.Meals;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +13,7 @@ import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -22,11 +27,10 @@ import java.util.List;
                 columnNames = "name"
         )
 )
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MealCategory {
+public class MealCategory{
 
     @Id
     @SequenceGenerator(
@@ -57,10 +61,8 @@ public class MealCategory {
     @OneToMany(
             cascade = CascadeType.ALL,
             mappedBy = "mealCategory")
+    @JsonIgnore
     private List<Meal> meals;
-
-
-
 
 
     public MealCategory(String category, String thumbnail, String description, String strArea) {
@@ -102,6 +104,7 @@ public class MealCategory {
         meal.setMealCategory(null);
     }
 
+    @JsonManagedReference
     public List<Meal> getMeals() {
         return meals;
     }
@@ -130,6 +133,10 @@ public class MealCategory {
 
     public Long getId() {
         return id;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
     }
 
     public String getCategory() {

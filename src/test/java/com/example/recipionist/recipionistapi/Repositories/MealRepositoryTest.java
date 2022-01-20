@@ -4,6 +4,8 @@ import com.example.recipionist.recipionistapi.Models.Meals.Meal;
 import com.example.recipionist.recipionistapi.Models.Meals.MealCategory;
 import com.example.recipionist.recipionistapi.Models.Meals.MealIngredient;
 import com.example.recipionist.recipionistapi.Models.User.User;
+import com.example.recipionist.recipionistapi.Registration.RegistrationRequest;
+import com.example.recipionist.recipionistapi.Registration.RegistrationService;
 import com.example.recipionist.recipionistapi.Services.MealCategoryService;
 import com.example.recipionist.recipionistapi.Services.MealIngredientService;
 import com.example.recipionist.recipionistapi.Services.MealService;
@@ -33,6 +35,10 @@ class MealRepositoryTest {
 
     @Autowired
     MealIngredientRepository mealIngredientRepository;
+
+    @Autowired
+    RegistrationService registrationService;
+
 
     @Test
     public void createMeal() {
@@ -79,12 +85,23 @@ class MealRepositoryTest {
         mealIngredientRepository.save(mealIngredient1);
         mealIngredientRepository.save(mealIngredient2);
 
+    }
+
+
+    @Test
+    public void createUserAndMeal() {
+
+        RegistrationRequest request = new RegistrationRequest(
+                "Tywin", "Lannister", "tywin.lannister@gmail.com", "password");
+        registrationService.register(request);
+        User user = userRepository.findById(1L).get();
+
+
 
 
 
 
     }
-
 
 
 

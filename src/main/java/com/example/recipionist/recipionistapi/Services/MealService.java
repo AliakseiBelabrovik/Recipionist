@@ -11,6 +11,7 @@ import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,6 +31,38 @@ public class MealService {
     /**
      * Section we new methods to work with the database
      */
+    public boolean deleteMealFromDatabase(Long id) {
+        if (mealRepository.findById(id).isEmpty()) {
+           throw new IllegalStateException("There is no meal with id " + id);
+        }
+
+        Meal meal = mealRepository.findById(id).get();
+        System.out.println("Meal found before deleting: " + meal);
+
+        MealCategory mealCategory = meal.getMealCategory();
+        mealCategory.removeMeal(meal);
+
+        User user = meal.getUser();
+        user.removeMeal(meal);
+
+        List<MealIngredient> mealIngredientList = meal.getMealIngredients();
+        for (int i = 0; i < mealIngredientList.size(); i++) {
+            MealIngredient mealIngredient = mealIngredientList.get(i);
+            mealIngredient.getIngredient().removeIngredient(mealIngredient);
+            mealIngredientService.deleteMealIngredientFromDatabase(mealIngredient.getId());
+            meal.removeIngredient(mealIngredient);
+        }
+        mealRepository.deleteById(id);
+
+        if (mealRepository.findById(id).isEmpty()) {
+            System.out.println("The meal was deleted");
+            return true;
+        }
+        System.out.println("The meal WAS NOT deleted");
+        return false;
+    }
+
+
 
     public Meal addNewMealToDatabase(Meal meal) {
 
@@ -41,8 +74,6 @@ public class MealService {
             return optionalMeal.get();
         }
         //otherwise
-
-
 
 
         //then save mealCategory
@@ -64,8 +95,6 @@ public class MealService {
         meal.setUser(currentUser);
 
         //TODO: do not forget to add meal to user
-
-
 
 
         //save Ingredient and then mealIngredient first
@@ -98,16 +127,17 @@ public class MealService {
             //TODO: not forget to set meal later
         }
 
-        //mealCategory.addMeal(meal);
-        currentUser.addMeal(meal);
+
 
         mealRepository.save(meal);
+        mealCategory.addMeal(meal);
+        currentUser.addMeal(meal);
         //Maybe better to save user???
         //don't forget to update bidirectional relationships
 
 
         //TODO save mealIngredient again, to update meal_id column (and many ingredient_id column)
-
+        //fpr ea
 
         return meal;
     }

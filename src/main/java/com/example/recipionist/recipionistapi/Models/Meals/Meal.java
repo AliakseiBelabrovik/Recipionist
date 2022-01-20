@@ -1,6 +1,9 @@
 package com.example.recipionist.recipionistapi.Models.Meals;
 
 import com.example.recipionist.recipionistapi.Models.User.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +15,7 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +28,6 @@ import java.util.List;
                 columnNames = "name"
         )
         )
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -73,6 +76,7 @@ public class Meal {
     )
     protected MealCategory mealCategory;
 
+    @JsonBackReference
     public MealCategory getMealCategory() {
         return mealCategory;
     }
