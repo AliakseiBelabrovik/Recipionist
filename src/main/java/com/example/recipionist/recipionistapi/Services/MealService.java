@@ -29,16 +29,14 @@ public class MealService {
     MealIngredientService mealIngredientService;
     MealCategoryService mealCategoryService;
 
+    /**
+     * Section with new methods to work with the database
+     */
 
     public Meal getMealById(Long mealId) {
         return mealRepository.findById(mealId)
                 .orElseThrow(() -> new IllegalStateException("There is no meal with the id " + mealId));
     }
-
-    /**
-     * Section with new methods to work with the database
-     */
-
 
     public Meal updateMealPatch(Meal meal, Long id) {
 
@@ -96,6 +94,7 @@ public class MealService {
 
                     boolean ingredientExists = false;
                     int position = -1;
+
                     //look in the list of current meal ingredients, if the ingredient for this recipe is already there
                     for (int y = 0; y < currentMealIngredientsList.size(); y++) {
                         if (meal.getIngredients().get(i).equals(currentMealIngredientsList.get(y).getIngredient().getIngredientName())) {
@@ -129,44 +128,6 @@ public class MealService {
                                 .build();
                         mealIngredientService.addNewMealIngredientToDatabase(mealIngredient);
                     }
-
-
-                    /*
-
-                    //find if there is already a meal ingredient with the same ingredient name
-                    for (int y = 0; y < currentMealIngredientsList.size(); y++) {
-                        if (currentMealIngredientsList.get(y).getIngredient().getIngredientName()
-                                .equals(meal.getIngredients().get(i))) {
-                            MealIngredient currentMealIngredient = currentMealIngredientsList.get(y);
-                            //update its measure
-                            currentMealIngredient.setMeasure(meal.getMeasures().get(i));
-                            mealIngredientService.updateMeasureOfMealIngredient(
-                                    currentMealIngredient.getId(), meal.getMeasures().get(i));
-                            //otherwise, create meal ingredient
-                        } else {
-                            //get ingredient from the database or else create & save it
-                            Ingredient newIngredient = Ingredient.builder()
-                                    .ingredientName(meal.getIngredients().get(i))
-                                    .build();
-
-                            try {
-                                ingredientService.addNewIngredientToDatabase(newIngredient);
-                            } catch (IllegalStateException exception) {
-                                newIngredient = ingredientService.getIngredientFromDatabaseByName(newIngredient.getIngredientName());
-                            }
-
-                            //creation of the meal ingredient
-                            MealIngredient mealIngredient = MealIngredient.builder()
-                                    .measure(meal.getMeasures().get(i))
-                                    .ingredient(newIngredient)
-                                    .meal(currentMealInDB)
-                                    .build();
-                            mealIngredientService.addNewMealIngredientToDatabase(mealIngredient);
-                        }
-
-
-                    }
-                 */
                 }
             }
             return currentMealInDB;
@@ -219,7 +180,7 @@ public class MealService {
         //otherwise
 
 
-        //then save mealCategory
+        //find or save new mealCategory
         MealCategory mealCategory;
         try {
             mealCategory = mealCategoryService.getMealCategoryByName(meal.getCategory());
@@ -231,15 +192,12 @@ public class MealService {
             mealCategoryService.addNewMealCategoryInDatabase(mealCategory);
             mealCategory = mealCategoryService.getMealCategoryByName(meal.getCategory());
         }
-        //TODO: do not forget to add meal to list in mealcategories
-        //TODO: do not forget to add mealCategory to the meal
+
         meal.setMealCategory(mealCategory);
 
         //get current user
         User currentUser = userService.getCurrentUser();
         meal.setUser(currentUser);
-
-        //TODO: do not forget to add meal to user
 
         List<MealIngredient> mealIngredientList = new ArrayList<>();
 
@@ -253,8 +211,6 @@ public class MealService {
             } catch (IllegalStateException exception) {
                 ingredient = ingredientService.getIngredientFromDatabaseByName(ingredient.getIngredientName());
             }
-
-            //TODO: do not forget to add mealIngredient later
 
             MealIngredient mealIngredient = MealIngredient.builder()
                     .measure(meal.getMeasures().get(i))
