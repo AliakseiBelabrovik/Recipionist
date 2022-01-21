@@ -25,10 +25,17 @@ public interface MealIngredientRepository extends JpaRepository<MealIngredient, 
             nativeQuery = true,
             value = "UPDATE meal_ingredients SET meal_id = ?2 WHERE id = ?1"
     )
-    int updateMealById(Long id, Meal meal);
+    int updateMealOfMealIngredient(Long mealIngredientId, Meal meal);
 
 
 
     List<MealIngredient> findMealIngredientsByMeal(Meal meal);
 
+    @Modifying
+    @Transactional
+    @Query(
+            nativeQuery = true,
+            value = "UPDATE meal_ingredients SET measure = ?2 WHERE id = ?1"
+    )
+    int updateMeasureByMealIngredientId(Long mealIngredientId, String measure);
 }

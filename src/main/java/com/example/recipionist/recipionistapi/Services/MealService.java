@@ -29,106 +29,150 @@ public class MealService {
     MealIngredientService mealIngredientService;
     MealCategoryService mealCategoryService;
 
+
+    public Meal getMealById(Long mealId) {
+        return mealRepository.findById(mealId)
+                .orElseThrow(() -> new IllegalStateException("There is no meal with the id " + mealId));
+    }
+
     /**
      * Section with new methods to work with the database
      */
 
 
     public Meal updateMealPatch(Meal meal, Long id) {
-        if (mealRepository.getById(id) == null) {
-            throw new IllegalStateException("There is no meal with the id " + id);
-        }
-        Meal currentMealInDB = mealRepository.getById(id);
 
-        boolean needUpdate = false;
+        try {
+            Meal currentMealInDB = getMealById(id);
+            boolean needUpdate = false;
 
-        if (StringUtils.hasLength(meal.getMealName())) {
-            currentMealInDB.setMealName(meal.getMealName());
-            //maybe mealRepository.updateMealNameById(meal.getMealName(), id);
-        }
-        if (StringUtils.hasLength(meal.getArea())) {
-            currentMealInDB.setArea(meal.getArea());
-            //maybe mealRepository.updateAreaById(meal.getArea(), id);
-        }
-        if (StringUtils.hasLength(meal.getThumbnail())) {
-            currentMealInDB.setThumbnail(meal.getThumbnail());
-        }
-        if (StringUtils.hasLength(meal.getInstructions())) {
-            currentMealInDB.setInstructions(meal.getInstructions());
-        }
-        if (StringUtils.hasLength(meal.getYoutubeLink())) {
-            currentMealInDB.setYoutubeLink(meal.getYoutubeLink());
-        }
-        if (StringUtils.hasLength(meal.getTags())) {
-            currentMealInDB.setTags(meal.getTags());
-        }
-
-        if (StringUtils.hasLength(meal.getCategory())) {
-            MealCategory mealCategory;
-            try {
-                mealCategory = mealCategoryService.getMealCategoryByName(meal.getCategory());
-                //if there is no such mealCategory, create and save a new one
-            } catch (IllegalStateException exception) {
-                mealCategory = MealCategory.builder()
-                        .categoryName(meal.getCategory())
-                        .build();
-                mealCategoryService.addNewMealCategoryInDatabase(mealCategory);
-                mealCategory = mealCategoryService.getMealCategoryByName(meal.getCategory());
+            if (StringUtils.hasLength(meal.getMealName())) {
+                currentMealInDB.setMealName(meal.getMealName());
+                //maybe mealRepository.updateMealNameById(meal.getMealName(), id);
             }
-            currentMealInDB.setCategory(meal.getCategory()); //updates string
-            currentMealInDB.setMealCategory(mealCategory); //updates the table (foreign key) with mealCategory Object
-        }
-
-
-        List<MealIngredient> mealIngredientList = new ArrayList<>();
-
-        //save Ingredient and then mealIngredient first
-        for (int i= 0; i < meal.getIngredients().size(); i++) {
-            Ingredient ingredient = Ingredient.builder()
-                    .ingredientName(meal.getIngredients().get(i))
-                    .build();
-            try {
-                ingredientService.addNewIngredientToDatabase(ingredient);
-            } catch (IllegalStateException exception) {
-                ingredient = ingredientService.getIngredientFromDatabaseByName(ingredient.getIngredientName());
+            if (StringUtils.hasLength(meal.getArea())) {
+                currentMealInDB.setArea(meal.getArea());
+                //maybe mealRepository.updateAreaById(meal.getArea(), id);
+            }
+            if (StringUtils.hasLength(meal.getThumbnail())) {
+                currentMealInDB.setThumbnail(meal.getThumbnail());
+            }
+            if (StringUtils.hasLength(meal.getInstructions())) {
+                currentMealInDB.setInstructions(meal.getInstructions());
+            }
+            if (StringUtils.hasLength(meal.getYoutubeLink())) {
+                currentMealInDB.setYoutubeLink(meal.getYoutubeLink());
+            }
+            if (StringUtils.hasLength(meal.getTags())) {
+                currentMealInDB.setTags(meal.getTags());
             }
 
-            //TODO: do not forget to add mealIngredient later
+            if (StringUtils.hasLength(meal.getCategory())) {
+                MealCategory mealCategory;
+                try { //get meal category from the database
+                    mealCategory = mealCategoryService.getMealCategoryByName(meal.getCategory());
+                    //if there is no such mealCategory, create and save a new one
+                } catch (IllegalStateException exception) {
+                    mealCategory = MealCategory.builder()
+                            .categoryName(meal.getCategory())
+                            .build();
+                    mealCategoryService.addNewMealCategoryInDatabase(mealCategory);
+                    mealCategory = mealCategoryService.getMealCategoryByName(meal.getCategory());
+                }
+                currentMealInDB.setCategory(meal.getCategory()); //updates string
+                currentMealInDB.setMealCategory(mealCategory); //updates the table (foreign key) with mealCategory Object
+            }
 
-            MealIngredient mealIngredient = MealIngredient.builder()
-                    .measure(meal.getMeasures().get(i))
-                    .ingredient(ingredient)
-                    //.ingredient(ingredientService.getIngredientFromDatabaseByName(meal.getIngredients().get(i)))
-                    .build();
-            mealIngredientService.addNewMealIngredientToDatabase(mealIngredient);
+            //If there is any ingredient and measure
+            if (meal.getIngredients() != null && meal.getIngredients().size() > 0
+                && meal.getMeasures() != null && meal.getMeasures().size() > 0
+                ) {
 
-            mealIngredientList.add(mealIngredient);
+                //get the list of meal ingredients related to the current meal recipe
+                List<MealIngredient> currentMealIngredientsList = mealIngredientService.findMealIngredientsByMeal(currentMealInDB);
+
+                //for each ingredient
+                for (int i = 0; i < meal.getIngredients().size(); i++) {
+
+                    boolean ingredientExists = false;
+                    int position = -1;
+                    //look in the list of current meal ingredients, if the ingredient for this recipe is already there
+                    for (int y = 0; y < currentMealIngredientsList.size(); y++) {
+                        if (meal.getIngredients().get(i).equals(currentMealIngredientsList.get(y).getIngredient().getIngredientName())) {
+                            ingredientExists = true;
+                            position = y;
+                        }
+                    }
+                    if (ingredientExists) {
+                        MealIngredient currentMealIngredient = currentMealIngredientsList.get(position);
+                        //update its measure
+                        currentMealIngredient.setMeasure(meal.getMeasures().get(i));
+                        mealIngredientService.updateMeasureOfMealIngredient(
+                                currentMealIngredient.getId(), meal.getMeasures().get(i));
+                    } else {
+                        //get ingredient from the database or else create & save it
+                        Ingredient newIngredient = Ingredient.builder()
+                                .ingredientName(meal.getIngredients().get(i))
+                                .build();
+
+                        try {
+                            ingredientService.addNewIngredientToDatabase(newIngredient);
+                        } catch (IllegalStateException exception) {
+                            newIngredient = ingredientService.getIngredientFromDatabaseByName(newIngredient.getIngredientName());
+                        }
+
+                        //creation of the meal ingredient
+                        MealIngredient mealIngredient = MealIngredient.builder()
+                                .measure(meal.getMeasures().get(i))
+                                .ingredient(newIngredient)
+                                .meal(currentMealInDB)
+                                .build();
+                        mealIngredientService.addNewMealIngredientToDatabase(mealIngredient);
+                    }
+
+
+                    /*
+
+                    //find if there is already a meal ingredient with the same ingredient name
+                    for (int y = 0; y < currentMealIngredientsList.size(); y++) {
+                        if (currentMealIngredientsList.get(y).getIngredient().getIngredientName()
+                                .equals(meal.getIngredients().get(i))) {
+                            MealIngredient currentMealIngredient = currentMealIngredientsList.get(y);
+                            //update its measure
+                            currentMealIngredient.setMeasure(meal.getMeasures().get(i));
+                            mealIngredientService.updateMeasureOfMealIngredient(
+                                    currentMealIngredient.getId(), meal.getMeasures().get(i));
+                            //otherwise, create meal ingredient
+                        } else {
+                            //get ingredient from the database or else create & save it
+                            Ingredient newIngredient = Ingredient.builder()
+                                    .ingredientName(meal.getIngredients().get(i))
+                                    .build();
+
+                            try {
+                                ingredientService.addNewIngredientToDatabase(newIngredient);
+                            } catch (IllegalStateException exception) {
+                                newIngredient = ingredientService.getIngredientFromDatabaseByName(newIngredient.getIngredientName());
+                            }
+
+                            //creation of the meal ingredient
+                            MealIngredient mealIngredient = MealIngredient.builder()
+                                    .measure(meal.getMeasures().get(i))
+                                    .ingredient(newIngredient)
+                                    .meal(currentMealInDB)
+                                    .build();
+                            mealIngredientService.addNewMealIngredientToDatabase(mealIngredient);
+                        }
+
+
+                    }
+                 */
+                }
+            }
+            return currentMealInDB;
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException(e.getMessage());
         }
-
-        mealRepository.save(meal);
-        for (int i = 0; i < mealIngredientList.size(); i++) {
-            mealIngredientList.get(i).setMeal(meal);
-            mealIngredientService.updateMeal(mealIngredientList.get(i).getId(), meal);
-            //System.out.println("Meal Id = " + meal.getId());
-            //mealIngredientService.updateMealId(mealIngredientList.get(i).getId(), meal.getId());
-        }
-
-        /*
-
-        if (meal.getIngredients() != null && meal.getIngredients().size() > 0) {
-            actualMeal.setIngredients(meal.getIngredients());
-        }
-        if (meal.getMeasures() != null && meal.getMeasures().size() > 0) {
-            actualMeal.setMeasures(meal.getMeasures());
-        }
-        if (StringUtils.hasLength(meal.getImageSrc())) {
-            actualMeal.setImageSrc(meal.getImageSrc());
-        }
-
-        return mealsLocal.get(i);
- */
-
-        return null;
     }
 
     public boolean deleteMealFromDatabase(Long id) {
@@ -222,19 +266,11 @@ public class MealService {
             mealIngredientList.add(mealIngredient);
         }
 
-
-
         mealRepository.save(meal);
         for (int i = 0; i < mealIngredientList.size(); i++) {
             mealIngredientList.get(i).setMeal(meal);
-            mealIngredientService.updateMeal(mealIngredientList.get(i).getId(), meal);
-            //System.out.println("Meal Id = " + meal.getId());
-            //mealIngredientService.updateMealId(mealIngredientList.get(i).getId(), meal.getId());
+            mealIngredientService.updateMealOfMealIngredient(mealIngredientList.get(i).getId(), meal);
         }
-
-
-        //TODO save mealIngredient again, to update meal_id column (and many ingredient_id column)
-
 
         return meal;
     }

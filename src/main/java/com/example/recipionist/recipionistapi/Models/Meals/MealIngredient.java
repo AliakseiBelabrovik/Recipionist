@@ -54,6 +54,7 @@ public class MealIngredient {
     public void setMeal(Meal meal) {
         this.meal = meal;
     }
+
     /*
 
     public void setMeal(Meal meal) {
@@ -88,8 +89,17 @@ public class MealIngredient {
     }
     */
 
+
     public Long getId() {
         return id;
+    }
+
+    public String getMeasure() {
+        return measure;
+    }
+
+    public void setMeasure(String measure) {
+        this.measure = measure;
     }
 
     @Override

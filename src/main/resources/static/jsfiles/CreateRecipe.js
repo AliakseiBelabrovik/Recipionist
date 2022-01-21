@@ -453,7 +453,7 @@
 
 
 
-            //Instructions //Measures
+            //Ingredients //Measures
             //===========================================================
             let rowWithTable = document.createElement("div");
             rowWithTable.classList.add("row");

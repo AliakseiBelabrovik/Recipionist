@@ -1,18 +1,12 @@
 package com.example.recipionist.recipionistapi.Services;
 
-import com.example.recipionist.recipionistapi.Models.Ingredient.Ingredient;
 import com.example.recipionist.recipionistapi.Models.Meals.Meal;
 import com.example.recipionist.recipionistapi.Models.Meals.MealIngredient;
-import com.example.recipionist.recipionistapi.Repositories.IngredientRepository;
 import com.example.recipionist.recipionistapi.Repositories.MealIngredientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class MealIngredientService {
@@ -46,10 +40,20 @@ public class MealIngredientService {
     }
 
 
-    public void updateMeal(Long id, Meal meal) {
-        mealIngredientRepository.updateMealById(id, meal);
+    //upgrades meal_id column for a particular meal ingredient
+    public void updateMealOfMealIngredient(Long mealIngredientId, Meal meal) {
+        mealIngredientRepository.updateMealOfMealIngredient(mealIngredientId, meal);
     }
 
+
+    /**
+     * Finds all meal ingredients that relate to a particular meal
+     * @param meal
+     * @return list of meal ingredients
+     */
+    public List<MealIngredient> findMealIngredientsByMeal(Meal meal) {
+        return mealIngredientRepository.findMealIngredientsByMeal(meal);
+    }
     /**
      * Method to delete MealIngredients from Database, which relate to a particular meal,
      * that we are going to delete too
@@ -57,7 +61,7 @@ public class MealIngredientService {
      */
     public void deleteMealIngredientsRelatedToMeal(Meal meal) {
 
-        List<MealIngredient> mealIngredientList = mealIngredientRepository.findMealIngredientsByMeal(meal);
+        List<MealIngredient> mealIngredientList = findMealIngredientsByMeal(meal);
         for (int i = 0; i < mealIngredientList.size(); i++) {
             MealIngredient mealIngredient = mealIngredientList.get(i);
             mealIngredient.setIngredient(null); //delete foreign key to an ingredient
@@ -69,5 +73,9 @@ public class MealIngredientService {
 
 
 
+    }
+
+    public void updateMeasureOfMealIngredient(Long mealIngredientId, String measure) {
+        mealIngredientRepository.updateMeasureByMealIngredientId(mealIngredientId, measure);
     }
 }
