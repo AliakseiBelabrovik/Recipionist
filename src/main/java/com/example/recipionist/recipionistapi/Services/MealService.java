@@ -110,9 +110,7 @@ public class MealService {
                                 currentMealIngredient.getId(), meal.getMeasures().get(i));
                     } else {
                         //get ingredient from the database or else create & save it
-                        Ingredient newIngredient = Ingredient.builder()
-                                .ingredientName(meal.getIngredients().get(i))
-                                .build();
+                        Ingredient newIngredient = ingredientService.createIngredient(meal.getIngredients().get(i));
 
                         try {
                             ingredientService.addNewIngredientToDatabase(newIngredient);
@@ -121,11 +119,7 @@ public class MealService {
                         }
 
                         //creation of the meal ingredient
-                        MealIngredient mealIngredient = MealIngredient.builder()
-                                .measure(meal.getMeasures().get(i))
-                                .ingredient(newIngredient)
-                                .meal(currentMealInDB)
-                                .build();
+                        MealIngredient mealIngredient = mealIngredientService.createMealIngredient(meal.getMeasures().get(i), newIngredient, currentMealInDB);
                         mealIngredientService.addNewMealIngredientToDatabase(mealIngredient);
                     }
                 }
@@ -203,22 +197,16 @@ public class MealService {
 
         //save Ingredient and then mealIngredient first
         for (int i= 0; i < meal.getIngredients().size(); i++) {
-            Ingredient ingredient = Ingredient.builder()
-                    .ingredientName(meal.getIngredients().get(i))
-                    .build();
+            Ingredient ingredient = ingredientService.createIngredient(meal.getIngredients().get(i));
             try {
                 ingredientService.addNewIngredientToDatabase(ingredient);
             } catch (IllegalStateException exception) {
                 ingredient = ingredientService.getIngredientFromDatabaseByName(ingredient.getIngredientName());
             }
 
-            MealIngredient mealIngredient = MealIngredient.builder()
-                    .measure(meal.getMeasures().get(i))
-                    .ingredient(ingredient)
-                    //.ingredient(ingredientService.getIngredientFromDatabaseByName(meal.getIngredients().get(i)))
-                    .build();
+            MealIngredient mealIngredient = mealIngredientService
+                    .createMealIngredient(meal.getMeasures().get(i), ingredient, null);
             mealIngredientService.addNewMealIngredientToDatabase(mealIngredient);
-
             mealIngredientList.add(mealIngredient);
         }
 

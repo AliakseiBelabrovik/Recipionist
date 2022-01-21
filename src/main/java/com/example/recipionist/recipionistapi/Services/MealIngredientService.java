@@ -1,5 +1,6 @@
 package com.example.recipionist.recipionistapi.Services;
 
+import com.example.recipionist.recipionistapi.Models.Ingredient.Ingredient;
 import com.example.recipionist.recipionistapi.Models.Meals.Meal;
 import com.example.recipionist.recipionistapi.Models.Meals.MealIngredient;
 import com.example.recipionist.recipionistapi.Repositories.MealIngredientRepository;
@@ -77,5 +78,21 @@ public class MealIngredientService {
 
     public void updateMeasureOfMealIngredient(Long mealIngredientId, String measure) {
         mealIngredientRepository.updateMeasureByMealIngredientId(mealIngredientId, measure);
+    }
+
+    public MealIngredient createMealIngredient(String measure, Ingredient ingredient, Meal meal) {
+        if (meal == null) {
+            return MealIngredient.builder()
+                    .measure(measure)
+                    .ingredient(ingredient)
+                    .build();
+        } else {
+            return MealIngredient.builder()
+                    .measure(measure)
+                    .ingredient(ingredient)
+                    .meal(meal)
+                    .build();
+        }
+
     }
 }

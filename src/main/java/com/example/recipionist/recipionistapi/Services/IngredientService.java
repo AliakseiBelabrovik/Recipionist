@@ -54,4 +54,25 @@ public class IngredientService {
         ingredientRepository.deleteById(id);
     }
 
+    public Ingredient createNewIngredientInDatabase(String ingredientName) {
+        try {
+            Ingredient ingredient = Ingredient
+                    .builder()
+                    .ingredientName(ingredientName)
+                    .build();
+            addNewIngredientToDatabase(ingredient);
+            return getIngredientFromDatabaseByName(ingredientName);
+        } catch (IllegalStateException e) {
+            System.out.println(e.getMessage());
+            return getIngredientFromDatabaseByName(ingredientName);
+        }
+
+    }
+
+    public Ingredient createIngredient(String ingredientName) {
+        return Ingredient
+                .builder()
+                .ingredientName(ingredientName)
+                .build();
+    }
 }
