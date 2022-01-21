@@ -42,7 +42,7 @@ public class Ingredient {
     @Column(name = "name", nullable = false, columnDefinition = "TEXT")
     private String ingredientName;
 
-
+    /*
     //TODO Add OneToMany Relationship with mappedBY attributes from MealIngredient and CocktailIngredient classes
     @Fetch(FetchMode.JOIN)
     @OneToMany(
@@ -84,8 +84,7 @@ public class Ingredient {
     public void setMealIngredients(List<MealIngredient> mealIngredients) {
         this.mealIngredients = mealIngredients;
     }
-
-
+    */
 
     public String getIngredientName() {
         return ingredientName;

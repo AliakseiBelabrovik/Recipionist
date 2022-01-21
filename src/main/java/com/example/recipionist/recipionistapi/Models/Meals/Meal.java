@@ -76,11 +76,15 @@ public class Meal {
     )
     protected MealCategory mealCategory;
 
-    @JsonBackReference
+
     public MealCategory getMealCategory() {
         return mealCategory;
     }
 
+    public void setMealCategory(MealCategory mealCategory) {
+        this.mealCategory = mealCategory;
+    }
+    /*
     public void setMealCategory(MealCategory mealCategory) {
         setMealCategory(mealCategory, true);
     }
@@ -90,6 +94,8 @@ public class Meal {
             mealCategory.addMeal(this, false);
         }
     }
+     */
+
 
     @ManyToOne(
             //optional = false
@@ -100,6 +106,7 @@ public class Meal {
     )
     private User user;
 
+    /*
     public void setUser(User user) {
         setUser(user, true);
     }
@@ -114,7 +121,8 @@ public class Meal {
     public User getUser() {
         return user;
     }
-
+     */
+    /*
     @Fetch(FetchMode.JOIN)
     @OneToMany(
             //cascade = CascadeType.ALL,
@@ -157,7 +165,7 @@ public class Meal {
     public void setMealIngredients(List<MealIngredient> mealIngredients) {
         this.mealIngredients = mealIngredients;
     }
-
+    */
     /**
      * Ändern!! Als Relationships darstellen!!!!
      */
@@ -181,10 +189,13 @@ public class Meal {
     @Transient //will not be a row in our database
     protected String drinkAlternate;
 
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-
-
-
+    public User getUser() {
+        return user;
+    }
 
     public Long getId() {
         return id;
@@ -230,6 +241,13 @@ public class Meal {
         return imageSrc;
     }
 
+    public String getYoutubeLink() {
+        return youtubeLink;
+    }
+
+    public void setYoutubeLink(String youtubeLink) {
+        this.youtubeLink = youtubeLink;
+    }
 
     public Meal(Long id, String mealName, String drinkAlternate, String category, String area, String thumbnail, String instructions,
                 String tags, ArrayList<String> ingredients, ArrayList<String> measures, String imageSrc){
@@ -249,20 +267,20 @@ public class Meal {
     @Override
     public String toString() {
         return "Meal{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", mealName='" + mealName + '\'' +
-                ", drinkAlternate='" + drinkAlternate + '\'' +
-                ", category='" + category + '\'' +
                 ", area='" + area + '\'' +
                 ", thumbnail='" + thumbnail + '\'' +
                 ", instructions='" + instructions + '\'' +
+                ", youtubeLink='" + youtubeLink + '\'' +
                 ", tags='" + tags + '\'' +
-                ", ingredients=" + ingredients +
-                ", measures=" + measures +
+                ", mealCategory=" + mealCategory +
+                ", user=" + user +
+                ", category='" + category + '\'' +
                 ", imageSrc='" + imageSrc + '\'' +
+                ", drinkAlternate='" + drinkAlternate + '\'' +
                 '}';
     }
-
 
     public void setId(Long id) {
         this.id = id;

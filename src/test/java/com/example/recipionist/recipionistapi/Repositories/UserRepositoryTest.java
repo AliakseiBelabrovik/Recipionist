@@ -88,6 +88,7 @@ class UserRepositoryTest {
         mealRepository.save(meal);
 
          */
+        /*
         //user.setMeals(new ArrayList<Meal>());
         List<Meal> meals = user.getMeals();
         //String area = meals.get(1).getArea();
@@ -98,12 +99,14 @@ class UserRepositoryTest {
         
         user.addMeal(meal);
         //System.out.println("meals = " + meals);
+
+         */
     }
 
     @Test
     public void printMealsOfUser() {
         User user = userRepository.findUserByEmail("santa@example.com").get();
-        System.out.println("Meals of the user " + user.getLastName() + " are " + user.getMeals());
+        //System.out.println("Meals of the user " + user.getLastName() + " are " + user.getMeals());
 
 
     }

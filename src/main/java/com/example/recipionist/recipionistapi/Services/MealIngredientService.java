@@ -1,14 +1,18 @@
 package com.example.recipionist.recipionistapi.Services;
 
 import com.example.recipionist.recipionistapi.Models.Ingredient.Ingredient;
+import com.example.recipionist.recipionistapi.Models.Meals.Meal;
 import com.example.recipionist.recipionistapi.Models.Meals.MealIngredient;
 import com.example.recipionist.recipionistapi.Repositories.IngredientRepository;
 import com.example.recipionist.recipionistapi.Repositories.MealIngredientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MealIngredientService {
@@ -29,11 +33,7 @@ public class MealIngredientService {
         return mealIngredientRepository.findById(id).get();
     }
 
-
-
     public void addNewMealIngredientToDatabase(MealIngredient mealIngredient) {
-
-
         mealIngredientRepository.save(mealIngredient);
     }
 
@@ -46,4 +46,28 @@ public class MealIngredientService {
     }
 
 
+    public void updateMeal(Long id, Meal meal) {
+        mealIngredientRepository.updateMealById(id, meal);
+    }
+
+    /**
+     * Method to delete MealIngredients from Database, which relate to a particular meal,
+     * that we are going to delete too
+     * @param meal -> Meal to be deleted
+     */
+    public void deleteMealIngredientsRelatedToMeal(Meal meal) {
+
+        List<MealIngredient> mealIngredientList = mealIngredientRepository.findMealIngredientsByMeal(meal);
+        for (int i = 0; i < mealIngredientList.size(); i++) {
+            MealIngredient mealIngredient = mealIngredientList.get(i);
+            mealIngredient.setIngredient(null); //delete foreign key to an ingredient
+            mealIngredient.setMeal(null); //delete foreign key the meal
+
+            //then, delete the mealIngredient itself
+            deleteMealIngredientFromDatabase(mealIngredient.getId());
+        }
+
+
+
+    }
 }

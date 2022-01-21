@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +43,17 @@ public class MealController {
         this.mealAreaService = mealAreaService;
     }
 
-
+    /**
+     * After the application runs, meal categories are got from the MealDB API and saved in the database
+     * If a particular meal category does exist, the entry is not being updated
+     */
+    @PostConstruct
+    public void generateMealCategories() {
+        List<MealCategory> mealCategories = getCategories();
+        for (MealCategory mealCategory : mealCategories) {
+            mealCategoryService.addNewMealCategoryInDatabase(mealCategory);
+        }
+    }
 
     @GetMapping("api/recipionist/meals/random")
     public Meal getARandomMeal() {
@@ -131,6 +142,7 @@ public class MealController {
         Meal mealResult = mealService.addNewMealToDatabase(meal);
         System.out.println(mealResult);
         return mealResult;
+        //return meal;
     }
 
 
@@ -147,11 +159,12 @@ public class MealController {
     public boolean deleteMeal( @PathVariable String id) {
         //return mealService.deleteMeal(id);
         return mealService.deleteMealFromDatabase(Long.parseLong(id));
+        //return false;
     }
 
 
     @PatchMapping("/api/recipionist/meals/update/{id}")
     public Meal updateMealPatch(@PathVariable String id, Meal meal) {
-        return mealService.updateMealPatch(meal, id);
+        return mealService.updateMealPatch(meal, Long.parseLong(id));
     }
 }

@@ -66,7 +66,7 @@ public class User implements UserDetails {
     //set to true, after the user confirmed his email
     private Boolean enabled = false;
 
-
+    /*
     @Fetch(FetchMode.JOIN)
     @OneToMany(
             cascade = CascadeType.ALL,
@@ -97,7 +97,7 @@ public class User implements UserDetails {
         this.getMeals().remove(meal);
         meal.setUser(null);
     }
-
+    */
     public User(String firstName,
                 String lastName,
                 UserRole userRole,
@@ -111,10 +111,10 @@ public class User implements UserDetails {
         this.userRole = userRole;
         this.email = email;
         this.password = password;
-        this.meals = meals;
+        //this.meals = meals;
     }
 
-
+    /*
 
     public List<Meal> getMeals() {
         return meals;
@@ -123,6 +123,8 @@ public class User implements UserDetails {
     public void setMeals(List<Meal> meals) {
         this.meals = meals;
     }
+
+     */
 
     public Long getId() {
         return id;

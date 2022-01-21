@@ -47,8 +47,8 @@ class IngredientRepositoryTest {
     @Test
     public void getMealIngredientsOfIngredient() {
         Ingredient ingredient = ingredientRepository.findIngredientByIngredientName("Lemon").get();
-        List<MealIngredient> mealIngredients = ingredient.getMealIngredients();
-        System.out.println("mealIngredients = " + mealIngredients);
+        //List<MealIngredient> mealIngredients = ingredient.getMealIngredients();
+        //System.out.println("mealIngredients = " + mealIngredients);
 
 
     }

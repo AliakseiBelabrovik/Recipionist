@@ -42,7 +42,7 @@ class MealRepositoryTest {
 
     @Test
     public void createMeal() {
-
+    /*
         User user = User.builder()
                 .firstName("Mama")
                 .lastName("Roach")
@@ -84,7 +84,7 @@ class MealRepositoryTest {
         //Updates entry for mealIngredient with new information: meal_id
         mealIngredientRepository.save(mealIngredient1);
         mealIngredientRepository.save(mealIngredient2);
-
+    */
     }
 
 
