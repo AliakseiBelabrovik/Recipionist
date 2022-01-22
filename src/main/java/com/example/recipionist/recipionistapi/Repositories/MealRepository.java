@@ -1,6 +1,7 @@
 package com.example.recipionist.recipionistapi.Repositories;
 
 import com.example.recipionist.recipionistapi.Models.Meals.Meal;
+import com.example.recipionist.recipionistapi.Models.Meals.MealCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -20,5 +21,6 @@ public interface MealRepository extends JpaRepository<Meal, Long> {
 
     ArrayList<Meal> findByAreaContainingIgnoreCase(String area);
 
+    ArrayList<Meal> findAllByMealCategory(MealCategory mealCategory);
 
 }

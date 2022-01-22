@@ -11,9 +11,7 @@ import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -33,6 +31,27 @@ public class MealService {
     /**
      * Section with new methods to work with the database
      */
+
+    public ArrayList<Meal> getAllMeals() {
+        ArrayList<Meal> allLocalMeals = new ArrayList<>(mealRepository.findAll());
+
+        for (Meal localMeal:
+             allLocalMeals) {
+            localMeal.setMeasures(mealIngredientService.getMeasures(localMeal));
+            localMeal.setIngredients(mealIngredientService.getIngredientsAsListOfStrings(localMeal));
+            localMeal.setCategory(localMeal.getMealCategory().getCategoryName());
+        }
+        return allLocalMeals;
+    }
+
+    public ArrayList<String> getAllAreasOfAllLocalMeals(ArrayList<Meal> localMeals) {
+        return getAllMeals()
+                .stream()
+                .map(Meal::getArea)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toCollection(ArrayList::new));
+
+    }
 
     public Meal getMealById(Long mealId) {
         Meal localMeal = mealRepository.findById(mealId)
@@ -234,7 +253,7 @@ public class MealService {
         return mealIngredientService.getMealByMealIngredient(mealIngredientList);
     }
 
-    private ArrayList<ShortMeal> getShortMealsFromMeals(List<Meal> meals) {
+    private ArrayList<ShortMeal> getShortMealsFromMeals(ArrayList<Meal> meals) {
         ArrayList<ShortMeal> shortMeals = new ArrayList<>();
         for (Meal meal: meals
              ) {
@@ -255,7 +274,11 @@ public class MealService {
      */
 
 
-
+    public Meal getRandomFromDatabase() {
+        Random random = new Random();
+        ArrayList<Meal> meals = getAllMeals();
+        return meals.get(random.nextInt(meals.size()));
+    }
 
     public Meal getSingleMeal(String data){
 
@@ -306,7 +329,7 @@ public class MealService {
         try {
             ingredient = ingredientService.getIngredientFromDatabaseByName(ingredientName);
             List<MealIngredient> mealIngredients = mealIngredientService.findMealIngredientsByIngredient(ingredient);
-            List<Meal> meals = findByMealIngredient(mealIngredients);
+            ArrayList<Meal> meals = new ArrayList<>(findByMealIngredient(mealIngredients));
             return getShortMealsFromMeals(meals);
         } catch (IllegalStateException e) { //if no such an ingredient exists
             System.out.println(e.getMessage());
@@ -330,8 +353,16 @@ public class MealService {
     }
 
 
+    public ArrayList<Meal> findMealsByCategory(MealCategory mealCategory) {
+        return mealRepository.findAllByMealCategory(mealCategory);
+    }
 
-    public ArrayList<ShortMeal> getLocalMealsByCategory(String category){
+    public ArrayList<ShortMeal> getLocalMealsByCategory(String categoryName){
+        MealCategory mealCategory = mealCategoryService.getMealCategoryByName(categoryName);
+        findMealsByCategory(mealCategory);
+        return getShortMealsFromMeals(findMealsByCategory(mealCategory));
+
+        /*
         ArrayList<ShortMeal> locals = new ArrayList<>();
         for (Meal meal:
                 this.localMeals.getAll()
@@ -343,6 +374,8 @@ public class MealService {
             }
         }
         return locals;
+
+         */
     }
 
     public ArrayList<ShortMeal> getLocalMealsByArea(String area){
@@ -500,4 +533,11 @@ public class MealService {
     }
 
 
+    public Meal getRandomFromTwoMeals(Meal randomMealFromMealDB) {
+        Random random = new Random();
+        ArrayList<Meal> twoMeals = new ArrayList<>();
+        twoMeals.add(randomMealFromMealDB);
+        twoMeals.add(getRandomFromDatabase());
+        return twoMeals.get(random.nextInt(twoMeals.size()));
+    }
 }

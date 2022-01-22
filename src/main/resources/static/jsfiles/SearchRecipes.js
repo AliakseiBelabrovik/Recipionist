@@ -179,6 +179,14 @@ document.addEventListener("DOMContentLoaded", function (event) {
             if (this.mainContainer == null) {
                 //do nothing
             } else {
+                /*
+                for(let i = 0; i < this.sectionDOM.children.length; i++) {
+                    if (this.sectionDOM.children[i].id === "mainContainerDetailed") {
+                        this.sectionDOM.appendChild(this.mainContainer);
+                    }
+                }
+                 */
+                this.sectionDOM.appendChild(this.mainContainer);
                 this.mainContainer.parentElement.removeChild(this.mainContainer);
             }
 

@@ -59,7 +59,7 @@ public class MealController {
     public Meal getARandomMeal() {
         String data = restTemplate.getForObject("https://www.themealdb.com/api/json/v1/1/random.php", String.class);
 
-        return mealService.getSingleMeal(data);
+        return mealService.getRandomFromTwoMeals(mealService.getSingleMeal(data));
     }
 
     @GetMapping("api/recipionist/meals/firstletter/{letter}")
@@ -102,14 +102,16 @@ public class MealController {
     public ArrayList<MealCategory> getCategories() {
        String data = restTemplate.getForObject("https://www.themealdb.com/api/json/v1/1/categories.php", String.class);
 
-        return mealCategoryService.getMealCategories(data);
+       return mealCategoryService.getMealCategories(data);
     }
 
     @GetMapping("api/recipionist/meals/areas")
     public ArrayList<MealArea> getAreas() {
         String data = restTemplate.getForObject("https://www.themealdb.com/api/json/v1/1/list.php?a=list", String.class);
+        ArrayList<MealArea> allAreas = mealAreaService.getMealAreas(data);
+        allAreas.addAll(this.mealAreaService.getLocalAreas(allAreas));
 
-        return mealAreaService.getMealAreas(data);
+        return allAreas;
     }
 
 
