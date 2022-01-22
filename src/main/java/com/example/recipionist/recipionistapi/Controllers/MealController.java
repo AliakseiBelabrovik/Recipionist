@@ -76,17 +76,12 @@ public class MealController {
 
         //if meal is present in the local DB, get it
         if (mealService.isLocalMeal(Long.parseLong(id))) {
-            try {
-                return mealService.getMealById(Long.parseLong(id));
-            } catch (IllegalStateException e) {
-                System.out.println("Exception = " + e.getMessage());
-                String data = restTemplate.getForObject("https://www.themealdb.com/api/json/v1/1/lookup.php?i="+id, String.class);
-                return mealService.getSingleMeal(data, id);
-            }
+            return mealService.getMealById(Long.parseLong(id));
+        } else {
+            //otherwise ask the MealDB
+            String data = restTemplate.getForObject("https://www.themealdb.com/api/json/v1/1/lookup.php?i="+id, String.class);
+            return mealService.getSingleMeal(data, id);
         }
-        //otherwise ask the MealDB
-        String data = restTemplate.getForObject("https://www.themealdb.com/api/json/v1/1/lookup.php?i="+id, String.class);
-        return mealService.getSingleMeal(data, id);
     }
 
     @GetMapping("api/recipionist/meals/name/{name}")
@@ -129,18 +124,17 @@ public class MealController {
     public ArrayList<ShortMeal> getByCategory(@PathVariable String category) {
         String data = restTemplate.getForObject("https://www.themealdb.com/api/json/v1/1/filter.php?c="+category, String.class);
         ArrayList<ShortMeal> allMeals = mealService.getMealsShort(data);
-
         allMeals.addAll(this.mealService.getLocalMealsByCategory(category));
+
         return allMeals;
     }
 
     @GetMapping("api/recipionist/meals/area/{area}")
     public ArrayList<ShortMeal> getByArea(@PathVariable String area) {
         String data =  restTemplate.getForObject("https://www.themealdb.com/api/json/v1/1/filter.php?a="+area, String.class);
-
         ArrayList<ShortMeal> allMeals = mealService.getMealsShort(data);
-
         allMeals.addAll(this.mealService.getLocalMealsByArea(area));
+
         return allMeals;
     }
 

@@ -358,9 +358,16 @@ public class MealService {
     }
 
     public ArrayList<ShortMeal> getLocalMealsByCategory(String categoryName){
-        MealCategory mealCategory = mealCategoryService.getMealCategoryByName(categoryName);
-        findMealsByCategory(mealCategory);
-        return getShortMealsFromMeals(findMealsByCategory(mealCategory));
+        try {
+            MealCategory mealCategory = mealCategoryService.getMealCategoryByName(categoryName);
+            return getShortMealsFromMeals(findMealsByCategory(mealCategory));
+        } catch (IllegalStateException e) {
+            System.out.println("e.getMessage() = " + e.getMessage());
+            return new ArrayList<ShortMeal>();
+        }
+
+
+
 
         /*
         ArrayList<ShortMeal> locals = new ArrayList<>();
@@ -398,8 +405,7 @@ public class MealService {
     }
 
     public boolean isLocalMeal(Long id) {
-        boolean exists = false;
-        return exists = mealRepository.findById(id).isPresent();
+        return mealRepository.findById(id).isPresent();
     }
 
     public Meal getSingleMeal(String data, String id){
