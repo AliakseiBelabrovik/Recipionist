@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -34,8 +35,16 @@ public class MealService {
      */
 
     public Meal getMealById(Long mealId) {
-        return mealRepository.findById(mealId)
+        Meal localMeal = mealRepository.findById(mealId)
                 .orElseThrow(() -> new IllegalStateException("There is no meal with the id " + mealId));
+
+        //set list of measures & ingredient names to be sent to the front end
+        localMeal.setMeasures(mealIngredientService.getMeasures(localMeal));
+        localMeal.setIngredients(mealIngredientService.getIngredientsAsListOfStrings(localMeal));
+
+        localMeal.setCategory(localMeal.getMealCategory().getCategoryName());
+
+        return localMeal;
     }
 
     public Meal updateMealPatch(Meal meal, Long id) {
@@ -188,6 +197,7 @@ public class MealService {
         }
 
         meal.setMealCategory(mealCategory);
+        meal.setCategory(mealCategory.getCategoryName());
 
         //get current user
         User currentUser = userService.getCurrentUser();
@@ -219,6 +229,27 @@ public class MealService {
         return meal;
     }
 
+
+    private List<Meal> findByMealIngredient(List<MealIngredient> mealIngredientList) {
+        return mealIngredientService.getMealByMealIngredient(mealIngredientList);
+    }
+
+    private ArrayList<ShortMeal> getShortMealsFromMeals(List<Meal> meals) {
+        ArrayList<ShortMeal> shortMeals = new ArrayList<>();
+        for (Meal meal: meals
+             ) {
+            ShortMeal shortMeal = ShortMeal.builder()
+                    .id(Long.toString(meal.getId()))
+                    .mealName(meal.getMealName())
+                    .thumbnail(meal.getThumbnail())
+                    .build();
+            shortMeals.add(shortMeal);
+        }
+        return shortMeals;
+    }
+
+
+
     /**
      * Section with methods for database ends here
      */
@@ -239,7 +270,11 @@ public class MealService {
         return meal;
     }
 
-    public ArrayList<Meal> getLocalMealsByName(String name){
+    public ArrayList<Meal> getLocalMealsByName(String mealName){
+        return mealRepository.findByMealNameContainingIgnoreCase(mealName);
+
+        /*
+
         ArrayList<Meal> locals = new ArrayList<>();
         for (Meal meal:
                 this.localMeals.getAll()
@@ -250,6 +285,7 @@ public class MealService {
             }
         }
         return locals;
+         */
     }
 
     public ArrayList<Meal> getLocalMealsByFirstletter(String firstletter){
@@ -265,7 +301,19 @@ public class MealService {
         return locals;
     }
 
-    public ArrayList<ShortMeal> getLocalMealsByIngredient(String ingredient){
+    public ArrayList<ShortMeal> getLocalMealsByIngredientName(String ingredientName){
+        Ingredient ingredient;
+        try {
+            ingredient = ingredientService.getIngredientFromDatabaseByName(ingredientName);
+            List<MealIngredient> mealIngredients = mealIngredientService.findMealIngredientsByIngredient(ingredient);
+            List<Meal> meals = findByMealIngredient(mealIngredients);
+            return getShortMealsFromMeals(meals);
+        } catch (IllegalStateException e) { //if no such an ingredient exists
+            System.out.println(e.getMessage());
+            return new ArrayList<ShortMeal>();
+        }
+        /*
+
         ArrayList<ShortMeal> locals = new ArrayList<>();
         for (Meal meal:
                 this.localMeals.getAll()
@@ -277,7 +325,11 @@ public class MealService {
             }
         }
         return locals;
+
+         */
     }
+
+
 
     public ArrayList<ShortMeal> getLocalMealsByCategory(String category){
         ArrayList<ShortMeal> locals = new ArrayList<>();
@@ -294,6 +346,9 @@ public class MealService {
     }
 
     public ArrayList<ShortMeal> getLocalMealsByArea(String area){
+        return getShortMealsFromMeals(mealRepository.findByAreaContainingIgnoreCase(area));
+
+        /*
         ArrayList<ShortMeal> locals = new ArrayList<>();
         for (Meal meal:
                 this.localMeals.getAll()
@@ -305,19 +360,22 @@ public class MealService {
             }
         }
         return locals;
+
+         */
+    }
+
+    public boolean isLocalMeal(Long id) {
+        boolean exists = false;
+        return exists = mealRepository.findById(id).isPresent();
     }
 
     public Meal getSingleMeal(String data, String id){
         Meal meal;
-        if(id.contains("localMeal")){
-            meal = this.localMeals.get(id);
+        ArrayList<Meal> meals = this.getMeals(data);
+        if(meals.size() == 1){
+            meal = meals.get(0);
         }else{
-            ArrayList<Meal> meals = this.getMeals(data);
-            if(meals.size() == 1){
-                meal = meals.get(0);
-            }else{
-                meal= null;
-            }
+            meal= null;
         }
         return meal;
     }
@@ -364,6 +422,21 @@ public class MealService {
             ArrayList<String> ingredients = this.getManyFromJsonArray(meal, "strIngredient");
             ArrayList<String> measures = this.getManyFromJsonArray(meal, "strMeasure");
 
+            Meal mealModel = Meal.builder()
+                    .id(Long.parseLong((String) meal.get("idMeal")))
+                    .mealName((String) meal.get("strMeal"))
+                    .thumbnail( (String) meal.get("strMealThumb"))
+                    .instructions((String) meal.get("strInstructions"))
+                    .youtubeLink((String) meal.get("strYoutube"))
+                    .tags((String) meal.get("strTags"))
+                    .mealCategory(mealCategoryService.getMealCategoryByName((String) meal.get("strCategory")))
+                    .category((String) meal.get("strCategory"))
+                    //.user(userService.getCurrentUser())
+                    .ingredients(ingredients)
+                    .measures(measures)
+                    .build();
+
+            /*
             Meal mealModel = new Meal(
                     (Long) meal.get("idMeal"),
                     (String) meal.get("strMeal"),
@@ -377,6 +450,8 @@ public class MealService {
                     measures,
                     (String) meal.get("strImageSource")
             );
+
+             */
             mealsList.add(mealModel);
 
         }

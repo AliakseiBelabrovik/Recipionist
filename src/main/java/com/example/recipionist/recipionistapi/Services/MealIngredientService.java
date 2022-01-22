@@ -7,7 +7,9 @@ import com.example.recipionist.recipionistapi.Repositories.MealIngredientReposit
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MealIngredientService {
@@ -47,6 +49,23 @@ public class MealIngredientService {
     }
 
 
+
+
+    public List<MealIngredient> findMealIngredientsByIngredient(Ingredient ingredient) {
+        return mealIngredientRepository.findMealIngredientsByIngredient(ingredient);
+    }
+
+    public List<Meal> getMealByMealIngredient(List<MealIngredient> mealIngredientList) {
+        //Find MealIngredients that have this ingredient
+        //then find Meals that have these MealIngredients
+        List<Meal> meals = new ArrayList<>();
+        for (int i = 0; i < mealIngredientList.size(); i++) {
+            meals.add(mealIngredientList.get(i).getMeal());
+        }
+        return meals;
+    }
+
+
     /**
      * Finds all meal ingredients that relate to a particular meal
      * @param meal
@@ -71,9 +90,6 @@ public class MealIngredientService {
             //then, delete the mealIngredient itself
             deleteMealIngredientFromDatabase(mealIngredient.getId());
         }
-
-
-
     }
 
     public void updateMeasureOfMealIngredient(Long mealIngredientId, String measure) {
@@ -94,5 +110,29 @@ public class MealIngredientService {
                     .build();
         }
 
+    }
+
+    /**
+     * @param meal -> takes meal as a parameter
+     * @return list of measures (string), that relate to this meal
+     */
+    public ArrayList<String> getMeasures(Meal meal) {
+        return findMealIngredientsByMeal(meal)
+                .stream()
+                .map(MealIngredient::getMeasure)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    /**
+     * This method returns the ingredient names of all ingredients that relate to a particular meal
+     * @param meal
+     * @return list of ingredient names
+     */
+    public ArrayList<String> getIngredientsAsListOfStrings(Meal meal) {
+        return findMealIngredientsByMeal(meal)
+                .stream()
+                .map(MealIngredient::getIngredient)
+                .map(Ingredient::getIngredientName)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }

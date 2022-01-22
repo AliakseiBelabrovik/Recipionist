@@ -73,16 +73,27 @@ public class MealController {
 
     @GetMapping("api/recipionist/meals/id/{id}")
     public Meal getById(@PathVariable String id) {
-        String data = restTemplate.getForObject("https://www.themealdb.com/api/json/v1/1/lookup.php?i="+id, String.class);
 
+        //if meal is present in the local DB, get it
+        if (mealService.isLocalMeal(Long.parseLong(id))) {
+            try {
+                return mealService.getMealById(Long.parseLong(id));
+            } catch (IllegalStateException e) {
+                System.out.println("Exception = " + e.getMessage());
+                String data = restTemplate.getForObject("https://www.themealdb.com/api/json/v1/1/lookup.php?i="+id, String.class);
+                return mealService.getSingleMeal(data, id);
+            }
+        }
+        //otherwise ask the MealDB
+        String data = restTemplate.getForObject("https://www.themealdb.com/api/json/v1/1/lookup.php?i="+id, String.class);
         return mealService.getSingleMeal(data, id);
     }
 
     @GetMapping("api/recipionist/meals/name/{name}")
     public ArrayList<Meal> getByName(@PathVariable String name) {
         String data = restTemplate.getForObject("https://www.themealdb.com/api/json/v1/1/search.php?s="+name, String.class);
-        ArrayList<Meal> allMeals = mealService.getMeals(data);
-        allMeals.addAll(this.mealService.getLocalMealsByName(name));
+        ArrayList<Meal> allMeals = mealService.getMeals(data); //Meals from MealDB
+        allMeals.addAll(this.mealService.getLocalMealsByName(name)); //Meals from the local DB
 
         return allMeals;
     }
@@ -106,8 +117,7 @@ public class MealController {
     public ArrayList<ShortMeal> getByIngredient(@PathVariable String ingredient) {
         String data = restTemplate.getForObject("https://www.themealdb.com/api/json/v1/1/filter.php?i="+ingredient, String.class);
         ArrayList<ShortMeal> allMeals = mealService.getMealsShort(data);
-
-        allMeals.addAll(this.mealService.getLocalMealsByIngredient(ingredient));
+        allMeals.addAll(this.mealService.getLocalMealsByIngredientName(ingredient));
 
         return allMeals;
     }

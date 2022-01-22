@@ -18,6 +18,9 @@ public interface MealIngredientRepository extends JpaRepository<MealIngredient, 
     Optional<MealIngredient> findByIngredientAndMeal(Ingredient ingredient, Meal meal);
     //Optional<MealIngredient> findMealIngredientByMeal(Meal meal);
 
+    List<MealIngredient> findMealIngredientsByIngredient(Ingredient ingredient);
+    List<MealIngredient> findMealIngredientsByMeal(Meal meal);
+
 
     @Modifying
     @Transactional
@@ -28,9 +31,6 @@ public interface MealIngredientRepository extends JpaRepository<MealIngredient, 
     int updateMealOfMealIngredient(Long mealIngredientId, Meal meal);
 
 
-
-    List<MealIngredient> findMealIngredientsByMeal(Meal meal);
-
     @Modifying
     @Transactional
     @Query(
@@ -38,4 +38,6 @@ public interface MealIngredientRepository extends JpaRepository<MealIngredient, 
             value = "UPDATE meal_ingredients SET measure = ?2 WHERE id = ?1"
     )
     int updateMeasureByMealIngredientId(Long mealIngredientId, String measure);
+
+
 }

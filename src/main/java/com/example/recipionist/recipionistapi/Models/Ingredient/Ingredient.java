@@ -42,50 +42,6 @@ public class Ingredient {
     @Column(name = "name", nullable = false, columnDefinition = "TEXT")
     private String ingredientName;
 
-    /*
-    //TODO Add OneToMany Relationship with mappedBY attributes from MealIngredient and CocktailIngredient classes
-    @Fetch(FetchMode.JOIN)
-    @OneToMany(
-            cascade = CascadeType.ALL,
-            mappedBy = "ingredient"
-    )
-    private List<MealIngredient> mealIngredients;
-
-    public void addMealIngredient(MealIngredient mealIngredient) {
-        addMealIngredient(mealIngredient, true);
-    }
-
-
-    public void addMealIngredient(MealIngredient mealIngredient, boolean set) {
-        if (mealIngredients == null) {
-            mealIngredients = new ArrayList<>();
-        }
-        if (mealIngredient != null) {
-            if (this.getMealIngredients().contains(mealIngredient)) {
-                this.getMealIngredients().set(this.getMealIngredients().indexOf(mealIngredient), mealIngredient);
-            } else {
-                this.getMealIngredients().add(mealIngredient);
-            }
-            if (set) {
-                mealIngredient.setIngredient(this, false);
-            }
-        }
-    }
-    public void removeIngredient(MealIngredient mealIngredient) {
-        this.getMealIngredients().remove(mealIngredient);
-        mealIngredient.setIngredient(null);
-    }
-
-
-    public List<MealIngredient> getMealIngredients() {
-        return mealIngredients;
-    }
-
-    public void setMealIngredients(List<MealIngredient> mealIngredients) {
-        this.mealIngredients = mealIngredients;
-    }
-    */
-
     public String getIngredientName() {
         return ingredientName;
     }

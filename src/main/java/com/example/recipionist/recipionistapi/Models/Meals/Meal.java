@@ -106,66 +106,6 @@ public class Meal {
     )
     private User user;
 
-    /*
-    public void setUser(User user) {
-        setUser(user, true);
-    }
-
-    public void setUser(User user, boolean add) {
-        this.user = user;
-        if (user != null && add) {
-            user.addMeal(this, false);
-        }
-    }
-
-    public User getUser() {
-        return user;
-    }
-     */
-    /*
-    @Fetch(FetchMode.JOIN)
-    @OneToMany(
-            //cascade = CascadeType.ALL,
-            mappedBy = "meal"
-    )
-    private List<MealIngredient> mealIngredients;
-
-
-    public void addMealIngredient(MealIngredient mealIngredient) {
-        addMealIngredient(mealIngredient, true);
-    }
-
-    public void addMealIngredient(MealIngredient mealIngredient, boolean set) {
-        if (mealIngredients == null) {
-            mealIngredients = new ArrayList<>();
-        }
-        if (mealIngredient != null) {
-            if (this.getMealIngredients().contains(mealIngredient)) {
-                this.getMealIngredients().set(this.getMealIngredients().indexOf(mealIngredient), mealIngredient);
-            } else {
-                this.getMealIngredients().add(mealIngredient);
-            }
-            if (set) {
-                mealIngredient.setMeal(this, false);
-            }
-        }
-    }
-
-
-    public void removeIngredient(MealIngredient mealIngredient) {
-        this.getMealIngredients().remove(mealIngredient);
-        mealIngredient.setMeal(null);
-    }
-
-
-    public List<MealIngredient> getMealIngredients() {
-        return mealIngredients;
-    }
-
-    public void setMealIngredients(List<MealIngredient> mealIngredients) {
-        this.mealIngredients = mealIngredients;
-    }
-    */
     /**
      * Ändern!! Als Relationships darstellen!!!!
      */
