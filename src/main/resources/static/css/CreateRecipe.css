@@ -87,7 +87,8 @@ Background and text color to the title section
 #alcoholRow {
     padding-bottom: 1.5rem;
 }
-#textRecipeName{
+
+.form-floating {
     padding-bottom: 1.5rem;
     color: #8f8f8f;
     font-family: 'Montserrat', sans-serif;

@@ -234,12 +234,19 @@ document.addEventListener("DOMContentLoaded", function (event) {
             paraWithInstructions.innerText = singleResult.instructions;
 
             let btnYoutube = document.createElement("a");
-            btnYoutube.href = singleResult.youtubeLink;
+            if (singleResult.youtubeLink == null ) {
+                btnYoutube.classList.add("disabled");
+                btnYoutube.setAttribute('aria-disabled', 'true');
+            } else {
+                btnYoutube.href = singleResult.youtubeLink;
+            }
             btnYoutube.target = "_blank";
             btnYoutube.classList.add("btn");
             btnYoutube.classList.add("btn-outline-dark");
             btnYoutube.classList.add("btn-lg");
             btnYoutube.classList.add("button-download");
+
+
 
             let youtubeLogo = document.createElement("i");
             youtubeLogo.classList.add("fab");
@@ -482,7 +489,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
                     let category = responseObj.category;
                     let area = responseObj.area;
                     let instructions = responseObj.instructions;
-                    let youtubeLink = null; //TODO
+                    let youtubeLink = responseObj.youtubeLink;
                     let ingredients = responseObj.ingredients; //array
                     let measures = responseObj.measures; //array
 

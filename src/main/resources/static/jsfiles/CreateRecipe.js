@@ -451,6 +451,59 @@
 
             imageRow.appendChild(col4);
 
+            let youtubeLinkRow = null;
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            if(selectMealOrCocktail.value === "meals" || selectMealOrCocktail.value === "updateMeal") {
+                //Youtube Link
+                //=====================================================================
+                youtubeLinkRow = document.createElement("div");
+                //youtubeLinkRow.id = "firstRowAfterIntro";
+                youtubeLinkRow.classList.add("row");
+
+                let col1Link = document.createElement("div");
+                col1Link.classList.add("col-sm-6");
+
+
+                let header3Link = document.createElement("h3");
+                header3Link.id = "youtubeLink";
+                header3Link.classList.add("name-for-form-attribute");
+                header3Link.innerText = "Youtube Link";
+
+                let textInputYoutubeLink = document.createElement("div");
+                textInputYoutubeLink.classList.add("form-floating");
+                textInputYoutubeLink.id = "textYoutubeLink";
+
+                let inputYoutubeLink = document.createElement("input");
+                inputYoutubeLink.type = "text";
+                inputYoutubeLink.classList.add("form-control");
+                inputYoutubeLink.id = "youtubeLink";
+                inputYoutubeLink.name = "youtubeLink";
+                /*
+                if (selectMealOrCocktail.value === "meals" || selectMealOrCocktail.value === "updateMeal") {
+                    inputYoutubeLink.name = "mealName";
+                } else {
+                    inputYoutubeLink.name = "name";
+                }
+
+                 */
+                inputYoutubeLink.placeholder = "Youtube Link";
+                //inputYoutubeLink.required;
+
+                let labelForYoutubeLink = document.createElement("label");
+                labelForYoutubeLink.htmlFor = "youtubeLink";
+                labelForYoutubeLink.innerText = "Youtube Link";
+
+                textInputYoutubeLink.appendChild(inputYoutubeLink);
+                textInputYoutubeLink.appendChild(labelForYoutubeLink);
+
+                col1Link.appendChild(header3Link);
+                col1Link.appendChild(textInputYoutubeLink);
+
+                youtubeLinkRow.appendChild(col1Link);
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
             //Ingredients //Measures
@@ -554,6 +607,7 @@
             }
             createRecipeInnerSection.appendChild(categoryRow);
             createRecipeInnerSection.appendChild(imageRow);
+            createRecipeInnerSection.appendChild(youtubeLinkRow);
             createRecipeInnerSection.appendChild(rowWithTable);
             createRecipeInnerSection.appendChild(rowWithButton);
 
