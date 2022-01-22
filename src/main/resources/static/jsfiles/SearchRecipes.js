@@ -225,7 +225,12 @@ document.addEventListener("DOMContentLoaded", function (event) {
             headerCategory.innerText = "Category: " + singleResult.category;
             let headerArea = document.createElement("h1");
             headerArea.id = "area";
-            headerArea.innerText = "Area: " + singleResult.area;
+            if (singleResult.area == null) {
+                headerArea.innerText = "Area: no information available" ;
+            } else {
+                headerArea.innerText = "Area: " + singleResult.area;
+            }
+
             let headerInstructions = document.createElement("h1");
             headerInstructions.id = "instructions";
             headerInstructions.innerText = "Instructions: ";
