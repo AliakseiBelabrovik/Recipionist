@@ -9,12 +9,12 @@ import lombok.AllArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -24,13 +24,140 @@ public class MealService {
     MealsObjects localMeals = new MealsObjects();
     MealRepository mealRepository;
     IngredientService ingredientService;
-    MealCategoryService mealCategoryService;
     UserService userService;
     MealIngredientService mealIngredientService;
+    MealCategoryService mealCategoryService;
 
     /**
-     * Section we new methods to work with the database
+     * Section with new methods to work with the database
      */
+
+    public ArrayList<Meal> getAllMeals() {
+        ArrayList<Meal> allLocalMeals = new ArrayList<>(mealRepository.findAll());
+
+        for (Meal localMeal:
+             allLocalMeals) {
+            localMeal.setMeasures(mealIngredientService.getMeasures(localMeal));
+            localMeal.setIngredients(mealIngredientService.getIngredientsAsListOfStrings(localMeal));
+            localMeal.setCategory(localMeal.getMealCategory().getCategoryName());
+        }
+        return allLocalMeals;
+    }
+
+    public ArrayList<String> getAllAreasOfAllLocalMeals(ArrayList<Meal> localMeals) {
+        return getAllMeals()
+                .stream()
+                .map(Meal::getArea)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toCollection(ArrayList::new));
+
+    }
+
+    public Meal getMealById(Long mealId) {
+        Meal localMeal = mealRepository.findById(mealId)
+                .orElseThrow(() -> new IllegalStateException("There is no meal with the id " + mealId));
+
+        //set list of measures & ingredient names to be sent to the front end
+        localMeal.setMeasures(mealIngredientService.getMeasures(localMeal));
+        localMeal.setIngredients(mealIngredientService.getIngredientsAsListOfStrings(localMeal));
+
+        localMeal.setCategory(localMeal.getMealCategory().getCategoryName());
+
+        return localMeal;
+    }
+
+    public Meal updateMealPatch(Meal meal, Long id) {
+
+        try {
+            Meal currentMealInDB = getMealById(id);
+            boolean needUpdate = false;
+
+            if (StringUtils.hasLength(meal.getMealName())) {
+                currentMealInDB.setMealName(meal.getMealName());
+                //maybe mealRepository.updateMealNameById(meal.getMealName(), id);
+            }
+            if (StringUtils.hasLength(meal.getArea())) {
+                currentMealInDB.setArea(meal.getArea());
+                //maybe mealRepository.updateAreaById(meal.getArea(), id);
+            }
+            if (StringUtils.hasLength(meal.getThumbnail())) {
+                currentMealInDB.setThumbnail(meal.getThumbnail());
+            }
+            if (StringUtils.hasLength(meal.getInstructions())) {
+                currentMealInDB.setInstructions(meal.getInstructions());
+            }
+            if (StringUtils.hasLength(meal.getYoutubeLink())) {
+                currentMealInDB.setYoutubeLink(meal.getYoutubeLink());
+            }
+            if (StringUtils.hasLength(meal.getTags())) {
+                currentMealInDB.setTags(meal.getTags());
+            }
+
+            if (StringUtils.hasLength(meal.getCategory())) {
+                MealCategory mealCategory;
+                try { //get meal category from the database
+                    mealCategory = mealCategoryService.getMealCategoryByName(meal.getCategory());
+                    //if there is no such mealCategory, create and save a new one
+                } catch (IllegalStateException exception) {
+                    mealCategory = MealCategory.builder()
+                            .categoryName(meal.getCategory())
+                            .build();
+                    mealCategoryService.addNewMealCategoryInDatabase(mealCategory);
+                    mealCategory = mealCategoryService.getMealCategoryByName(meal.getCategory());
+                }
+                currentMealInDB.setCategory(meal.getCategory()); //updates string
+                currentMealInDB.setMealCategory(mealCategory); //updates the table (foreign key) with mealCategory Object
+            }
+
+            //If there is any ingredient and measure
+            if (meal.getIngredients() != null && meal.getIngredients().size() > 0
+                && meal.getMeasures() != null && meal.getMeasures().size() > 0
+                ) {
+
+                //get the list of meal ingredients related to the current meal recipe
+                List<MealIngredient> currentMealIngredientsList = mealIngredientService.findMealIngredientsByMeal(currentMealInDB);
+
+                //for each ingredient
+                for (int i = 0; i < meal.getIngredients().size(); i++) {
+
+                    boolean ingredientExists = false;
+                    int position = -1;
+
+                    //look in the list of current meal ingredients, if the ingredient for this recipe is already there
+                    for (int y = 0; y < currentMealIngredientsList.size(); y++) {
+                        if (meal.getIngredients().get(i).equals(currentMealIngredientsList.get(y).getIngredient().getIngredientName())) {
+                            ingredientExists = true;
+                            position = y;
+                        }
+                    }
+                    if (ingredientExists) {
+                        MealIngredient currentMealIngredient = currentMealIngredientsList.get(position);
+                        //update its measure
+                        currentMealIngredient.setMeasure(meal.getMeasures().get(i));
+                        mealIngredientService.updateMeasureOfMealIngredient(
+                                currentMealIngredient.getId(), meal.getMeasures().get(i));
+                    } else {
+                        //get ingredient from the database or else create & save it
+                        Ingredient newIngredient = ingredientService.createIngredient(meal.getIngredients().get(i));
+
+                        try {
+                            ingredientService.addNewIngredientToDatabase(newIngredient);
+                        } catch (IllegalStateException exception) {
+                            newIngredient = ingredientService.getIngredientFromDatabaseByName(newIngredient.getIngredientName());
+                        }
+
+                        //creation of the meal ingredient
+                        MealIngredient mealIngredient = mealIngredientService.createMealIngredient(meal.getMeasures().get(i), newIngredient, currentMealInDB);
+                        mealIngredientService.addNewMealIngredientToDatabase(mealIngredient);
+                    }
+                }
+            }
+            return currentMealInDB;
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException(e.getMessage());
+        }
+    }
+
     public boolean deleteMealFromDatabase(Long id) {
         if (mealRepository.findById(id).isEmpty()) {
            throw new IllegalStateException("There is no meal with id " + id);
@@ -39,19 +166,16 @@ public class MealService {
         Meal meal = mealRepository.findById(id).get();
         System.out.println("Meal found before deleting: " + meal);
 
-        MealCategory mealCategory = meal.getMealCategory();
-        mealCategory.removeMeal(meal);
+        //delete foreign key to the meal category
+        meal.setMealCategory(null);
 
-        User user = meal.getUser();
-        user.removeMeal(meal);
+        //delete MealIngredients related to this meal
+        mealIngredientService.deleteMealIngredientsRelatedToMeal(meal);
 
-        List<MealIngredient> mealIngredientList = meal.getMealIngredients();
-        for (int i = 0; i < mealIngredientList.size(); i++) {
-            MealIngredient mealIngredient = mealIngredientList.get(i);
-            mealIngredient.getIngredient().removeIngredient(mealIngredient);
-            mealIngredientService.deleteMealIngredientFromDatabase(mealIngredient.getId());
-            meal.removeIngredient(mealIngredient);
-        }
+        //delete foreign key to the user
+        meal.setUser(null);
+
+
         mealRepository.deleteById(id);
 
         if (mealRepository.findById(id).isEmpty()) {
@@ -64,9 +188,11 @@ public class MealService {
 
 
 
+
     public Meal addNewMealToDatabase(Meal meal) {
 
-        //check fist if meal is already present TODO: check not only by name, but also by user, because
+        //check fist if meal is already present
+        // TODO: check not only by name, but also by user, because
         //TODO: many users can have their own recipes with the same name
         Optional<Meal> optionalMeal = mealRepository.findByMealName(meal.getMealName());
         if (optionalMeal.isPresent()) {
@@ -76,78 +202,83 @@ public class MealService {
         //otherwise
 
 
-        //then save mealCategory
+        //find or save new mealCategory
         MealCategory mealCategory;
         try {
             mealCategory = mealCategoryService.getMealCategoryByName(meal.getCategory());
+            //if there is no such mealCategory, create and save a new one
         } catch (IllegalStateException exception) {
             mealCategory = MealCategory.builder()
                     .categoryName(meal.getCategory())
                     .build();
             mealCategoryService.addNewMealCategoryInDatabase(mealCategory);
+            mealCategory = mealCategoryService.getMealCategoryByName(meal.getCategory());
         }
-        //TODO: do not forget to add meal to list in mealcategories
-        //TODO: do not forget to add mealCategory to the meal
 
-        User currentUser = userService.getCurrentUser();
-        //for consistence, because bidirectional relationships
         meal.setMealCategory(mealCategory);
+        meal.setCategory(mealCategory.getCategoryName());
+
+        //get current user
+        User currentUser = userService.getCurrentUser();
         meal.setUser(currentUser);
 
-        //TODO: do not forget to add meal to user
-
+        List<MealIngredient> mealIngredientList = new ArrayList<>();
 
         //save Ingredient and then mealIngredient first
         for (int i= 0; i < meal.getIngredients().size(); i++) {
-            Ingredient ingredient = Ingredient.builder()
-                    .ingredientName(meal.getIngredients().get(i))
-                    .build();
+            Ingredient ingredient = ingredientService.createIngredient(meal.getIngredients().get(i));
             try {
                 ingredientService.addNewIngredientToDatabase(ingredient);
             } catch (IllegalStateException exception) {
                 ingredient = ingredientService.getIngredientFromDatabaseByName(ingredient.getIngredientName());
             }
 
-            //TODO: do not forget to add mealIngredient later
-
-            MealIngredient mealIngredient = MealIngredient.builder()
-                    .measure(meal.getMeasures().get(i))
-                    .ingredient(ingredient)
-                    //.ingredient(ingredientService.getIngredientFromDatabaseByName(meal.getIngredients().get(i)))
-                    .build();
+            MealIngredient mealIngredient = mealIngredientService
+                    .createMealIngredient(meal.getMeasures().get(i), ingredient, null);
             mealIngredientService.addNewMealIngredientToDatabase(mealIngredient);
-
-            ingredient.addMealIngredient(mealIngredient);
-
-            //TODO: try this
-            //mealIngredient.setMeal(meal);
-
-            meal.addMealIngredient(mealIngredient);
-
-            //TODO: not forget to set meal later
+            mealIngredientList.add(mealIngredient);
         }
 
-
-
         mealRepository.save(meal);
-        mealCategory.addMeal(meal);
-        currentUser.addMeal(meal);
-        //Maybe better to save user???
-        //don't forget to update bidirectional relationships
-
-
-        //TODO save mealIngredient again, to update meal_id column (and many ingredient_id column)
-        //fpr ea
+        for (int i = 0; i < mealIngredientList.size(); i++) {
+            mealIngredientList.get(i).setMeal(meal);
+            mealIngredientService.updateMealOfMealIngredient(mealIngredientList.get(i).getId(), meal);
+        }
 
         return meal;
     }
+
+
+    private List<Meal> findByMealIngredient(List<MealIngredient> mealIngredientList) {
+        return mealIngredientService.getMealByMealIngredient(mealIngredientList);
+    }
+
+    private ArrayList<ShortMeal> getShortMealsFromMeals(ArrayList<Meal> meals) {
+        ArrayList<ShortMeal> shortMeals = new ArrayList<>();
+        for (Meal meal: meals
+             ) {
+            ShortMeal shortMeal = ShortMeal.builder()
+                    .id(Long.toString(meal.getId()))
+                    .mealName(meal.getMealName())
+                    .thumbnail(meal.getThumbnail())
+                    .build();
+            shortMeals.add(shortMeal);
+        }
+        return shortMeals;
+    }
+
+
 
     /**
      * Section with methods for database ends here
      */
 
 
-
+    public Meal getRandomFromDatabase() {
+        Random random = new Random();
+        ArrayList<Meal> meals = getAllMeals();
+        return meals.get(random.nextInt(meals.size()));
+    }
 
     public Meal getSingleMeal(String data){
 
@@ -162,7 +293,11 @@ public class MealService {
         return meal;
     }
 
-    public ArrayList<Meal> getLocalMealsByName(String name){
+    public ArrayList<Meal> getLocalMealsByName(String mealName){
+        return mealRepository.findByMealNameContainingIgnoreCase(mealName);
+
+        /*
+
         ArrayList<Meal> locals = new ArrayList<>();
         for (Meal meal:
                 this.localMeals.getAll()
@@ -173,6 +308,7 @@ public class MealService {
             }
         }
         return locals;
+         */
     }
 
     public ArrayList<Meal> getLocalMealsByFirstletter(String firstletter){
@@ -188,7 +324,19 @@ public class MealService {
         return locals;
     }
 
-    public ArrayList<ShortMeal> getLocalMealsByIngredient(String ingredient){
+    public ArrayList<ShortMeal> getLocalMealsByIngredientName(String ingredientName){
+        Ingredient ingredient;
+        try {
+            ingredient = ingredientService.getIngredientFromDatabaseByName(ingredientName);
+            List<MealIngredient> mealIngredients = mealIngredientService.findMealIngredientsByIngredient(ingredient);
+            ArrayList<Meal> meals = new ArrayList<>(findByMealIngredient(mealIngredients));
+            return getShortMealsFromMeals(meals);
+        } catch (IllegalStateException e) { //if no such an ingredient exists
+            System.out.println(e.getMessage());
+            return new ArrayList<ShortMeal>();
+        }
+        /*
+
         ArrayList<ShortMeal> locals = new ArrayList<>();
         for (Meal meal:
                 this.localMeals.getAll()
@@ -200,9 +348,28 @@ public class MealService {
             }
         }
         return locals;
+
+         */
     }
 
-    public ArrayList<ShortMeal> getLocalMealsByCategory(String category){
+
+    public ArrayList<Meal> findMealsByCategory(MealCategory mealCategory) {
+        return mealRepository.findAllByMealCategory(mealCategory);
+    }
+
+    public ArrayList<ShortMeal> getLocalMealsByCategory(String categoryName){
+        try {
+            MealCategory mealCategory = mealCategoryService.getMealCategoryByName(categoryName);
+            return getShortMealsFromMeals(findMealsByCategory(mealCategory));
+        } catch (IllegalStateException e) {
+            System.out.println("e.getMessage() = " + e.getMessage());
+            return new ArrayList<ShortMeal>();
+        }
+
+
+
+
+        /*
         ArrayList<ShortMeal> locals = new ArrayList<>();
         for (Meal meal:
                 this.localMeals.getAll()
@@ -214,9 +381,14 @@ public class MealService {
             }
         }
         return locals;
+
+         */
     }
 
     public ArrayList<ShortMeal> getLocalMealsByArea(String area){
+        return getShortMealsFromMeals(mealRepository.findByAreaContainingIgnoreCase(area));
+
+        /*
         ArrayList<ShortMeal> locals = new ArrayList<>();
         for (Meal meal:
                 this.localMeals.getAll()
@@ -228,19 +400,21 @@ public class MealService {
             }
         }
         return locals;
+
+         */
+    }
+
+    public boolean isLocalMeal(Long id) {
+        return mealRepository.findById(id).isPresent();
     }
 
     public Meal getSingleMeal(String data, String id){
         Meal meal;
-        if(id.contains("localMeal")){
-            meal = this.localMeals.get(id);
+        ArrayList<Meal> meals = this.getMeals(data);
+        if(meals.size() == 1){
+            meal = meals.get(0);
         }else{
-            ArrayList<Meal> meals = this.getMeals(data);
-            if(meals.size() == 1){
-                meal = meals.get(0);
-            }else{
-                meal= null;
-            }
+            meal= null;
         }
         return meal;
     }
@@ -255,10 +429,13 @@ public class MealService {
         return meal;
     }
 
+    /*
     public Meal updateMealPatch(Meal meal, String id) {
         meal = this.localMeals.updateMealPatch(meal, id);
         return meal;
     }
+
+     */
 
 
     public boolean deleteMeal( String id){
@@ -284,6 +461,21 @@ public class MealService {
             ArrayList<String> ingredients = this.getManyFromJsonArray(meal, "strIngredient");
             ArrayList<String> measures = this.getManyFromJsonArray(meal, "strMeasure");
 
+            Meal mealModel = Meal.builder()
+                    .id(Long.parseLong((String) meal.get("idMeal")))
+                    .mealName((String) meal.get("strMeal"))
+                    .thumbnail( (String) meal.get("strMealThumb"))
+                    .instructions((String) meal.get("strInstructions"))
+                    .youtubeLink((String) meal.get("strYoutube"))
+                    .tags((String) meal.get("strTags"))
+                    .mealCategory(mealCategoryService.getMealCategoryByName((String) meal.get("strCategory")))
+                    .category((String) meal.get("strCategory"))
+                    //.user(userService.getCurrentUser())
+                    .ingredients(ingredients)
+                    .measures(measures)
+                    .build();
+
+            /*
             Meal mealModel = new Meal(
                     (Long) meal.get("idMeal"),
                     (String) meal.get("strMeal"),
@@ -297,6 +489,8 @@ public class MealService {
                     measures,
                     (String) meal.get("strImageSource")
             );
+
+             */
             mealsList.add(mealModel);
 
         }
@@ -345,4 +539,11 @@ public class MealService {
     }
 
 
+    public Meal getRandomFromTwoMeals(Meal randomMealFromMealDB) {
+        Random random = new Random();
+        ArrayList<Meal> twoMeals = new ArrayList<>();
+        twoMeals.add(randomMealFromMealDB);
+        twoMeals.add(getRandomFromDatabase());
+        return twoMeals.get(random.nextInt(twoMeals.size()));
+    }
 }

@@ -1,6 +1,5 @@
 package com.example.recipionist.recipionistapi.Models.User;
 
-import com.example.recipionist.recipionistapi.Models.Cocktail.Cocktail;
 import com.example.recipionist.recipionistapi.Models.Meals.Meal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -67,7 +66,7 @@ public class User implements UserDetails {
     //set to true, after the user confirmed his email
     private Boolean enabled = false;
 
-
+    /*
     @Fetch(FetchMode.JOIN)
     @OneToMany(
             cascade = CascadeType.ALL,
@@ -104,33 +103,7 @@ public class User implements UserDetails {
         this.getMeals().remove(meal);
         meal.setUser(null);
     }
-
-
-    public void addCocktail(Cocktail cocktail) {
-        addCocktail(cocktail, true);
-    }
-
-    public void addCocktail(Cocktail cocktail, boolean set) {
-        if (cocktails == null) {
-            cocktails = new ArrayList<>();
-        }
-        if (cocktails != null) {
-            if (this.getCocktails().contains(cocktail)) {
-                this.getCocktails().set(this.getCocktails().indexOf(cocktail), cocktail);
-            } else {
-                this.getCocktails().add(cocktail);
-            }
-            if (set) {
-                cocktail.setUser(this, false);
-            }
-        }
-    }
-
-    public void removeCocktail(Cocktail cocktail) {
-        this.getCocktails().remove(cocktail);
-        cocktail.setUser(null);
-    }
-
+    */
     public User(String firstName,
                 String lastName,
                 UserRole userRole,
@@ -144,10 +117,10 @@ public class User implements UserDetails {
         this.userRole = userRole;
         this.email = email;
         this.password = password;
-        this.meals = meals;
+        //this.meals = meals;
     }
 
-
+    /*
 
     public List<Meal> getMeals() {
         return meals;
@@ -156,6 +129,8 @@ public class User implements UserDetails {
     public void setMeals(List<Meal> meals) {
         this.meals = meals;
     }
+
+     */
 
     public Long getId() {
         return id;

@@ -1,8 +1,6 @@
 package com.example.recipionist.recipionistapi.Services;
 
-import com.example.recipionist.recipionistapi.DataLoader;
 import com.example.recipionist.recipionistapi.Models.Ingredient.Ingredient;
-import com.example.recipionist.recipionistapi.Models.Meals.MealCategory;
 import com.example.recipionist.recipionistapi.Repositories.IngredientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,18 +22,17 @@ public class IngredientService {
         return ingredientRepository.findAll();
     }
 
-    public Ingredient getIngredientFromDatabaseByName(String name) {
-
-        //TODO: should ignore uppercase/lowercase?
-        Optional<Ingredient> optionalIngredient = ingredientRepository.findIngredientByIngredientName(name);
-        return optionalIngredient.orElse(null);
+    public Ingredient getIngredientFromDatabaseByName(String ingredientName) {
+        Optional<Ingredient> optionalIngredient = ingredientRepository.findIngredientByIngredientNameIgnoreCase(ingredientName);
+        return optionalIngredient.orElseThrow(() -> new IllegalStateException("There is no ingredient with name " + ingredientName));
+        //return optionalIngredient.orElse(null);
     }
 
 
     public void addNewIngredientToDatabase(Ingredient ingredient) {
 
         Optional<Ingredient> ingredientOptional =
-                ingredientRepository.findIngredientByIngredientName(ingredient.getIngredientName());
+                ingredientRepository.findIngredientByIngredientNameIgnoreCase(ingredient.getIngredientName());
 
         System.out.println("Optional ingredient is " + ingredientOptional);
         if (ingredientOptional.isPresent()) {
@@ -54,4 +51,25 @@ public class IngredientService {
         ingredientRepository.deleteById(id);
     }
 
+    public Ingredient createNewIngredientInDatabase(String ingredientName) {
+        try {
+            Ingredient ingredient = Ingredient
+                    .builder()
+                    .ingredientName(ingredientName)
+                    .build();
+            addNewIngredientToDatabase(ingredient);
+            return getIngredientFromDatabaseByName(ingredientName);
+        } catch (IllegalStateException e) {
+            System.out.println(e.getMessage());
+            return getIngredientFromDatabaseByName(ingredientName);
+        }
+
+    }
+
+    public Ingredient createIngredient(String ingredientName) {
+        return Ingredient
+                .builder()
+                .ingredientName(ingredientName)
+                .build();
+    }
 }

@@ -47,10 +47,15 @@ public class MealIngredient {
     )
     private Meal meal;
 
-
     public Meal getMeal() {
         return meal;
     }
+
+    public void setMeal(Meal meal) {
+        this.meal = meal;
+    }
+
+    /*
 
     public void setMeal(Meal meal) {
         setMeal(meal, true);
@@ -62,12 +67,17 @@ public class MealIngredient {
             meal.addMealIngredient(this, false);
         }
     }
+     */
 
 
     public Ingredient getIngredient() {
         return ingredient;
     }
 
+    public void setIngredient(Ingredient ingredient) {
+        this.ingredient = ingredient;
+    }
+    /*
     public void setIngredient(Ingredient ingredient) {
         setIngredient(ingredient, true);
     }
@@ -77,9 +87,19 @@ public class MealIngredient {
             ingredient.addMealIngredient(this, false);
         }
     }
+    */
+
 
     public Long getId() {
         return id;
+    }
+
+    public String getMeasure() {
+        return measure;
+    }
+
+    public void setMeasure(String measure) {
+        this.measure = measure;
     }
 
     @Override
@@ -87,6 +107,8 @@ public class MealIngredient {
         return "MealIngredient{" +
                 "id=" + id +
                 ", measure='" + measure + '\'' +
+                ", ingredient=" + ingredient +
+                ", meal=" + meal +
                 '}';
     }
 }

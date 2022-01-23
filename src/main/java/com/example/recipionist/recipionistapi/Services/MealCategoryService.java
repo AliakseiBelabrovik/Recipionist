@@ -1,6 +1,8 @@
 package com.example.recipionist.recipionistapi.Services;
 
+import com.example.recipionist.recipionistapi.Controllers.MealController;
 import com.example.recipionist.recipionistapi.DataLoader;
+import com.example.recipionist.recipionistapi.Models.Meals.Meal;
 import com.example.recipionist.recipionistapi.Models.Meals.MealCategory;
 import com.example.recipionist.recipionistapi.Models.User.User;
 import com.example.recipionist.recipionistapi.Repositories.MealCategoryRepository;
@@ -10,6 +12,7 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,9 +25,13 @@ public class MealCategoryService {
     DataLoader dataLoader = new DataLoader();
 
     @Autowired
-    public MealCategoryService(MealCategoryRepository mealCategoryRepository) {
+    public MealCategoryService(
+            MealCategoryRepository mealCategoryRepository) {
         this.mealCategoryRepository = mealCategoryRepository;
     }
+
+
+
 
 
     public MealCategory getMealCategoryById(Long id) {
@@ -51,7 +58,8 @@ public class MealCategoryService {
         System.out.println("Optional user is " + mealCategoryOptional);
         if (mealCategoryOptional.isPresent()) {
             System.out.println("Category name taken by " + mealCategoryOptional);
-            throw new IllegalStateException("Category name taken");
+            //throw new IllegalStateException("Category name taken");
+            return;
         }
         System.out.println("Adding new category " + mealCategory);
 
@@ -87,7 +95,8 @@ public class MealCategoryService {
             jsonArray.remove(jsonArray.size()-1);
 
             MealCategory mealCategory = new MealCategory(
-                    Long.parseLong((String) category.get("idCategory")),
+                    //The database will generate an id
+                    //Long.parseLong((String) category.get("idCategory")),
                     (String) category.get("strCategory"),
                     (String) category.get("strCategoryThumb"),
                     (String) category.get("strCategoryDescription"),

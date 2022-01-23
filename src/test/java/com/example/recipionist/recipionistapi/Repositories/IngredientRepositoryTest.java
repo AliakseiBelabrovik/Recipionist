@@ -1,15 +1,12 @@
 package com.example.recipionist.recipionistapi.Repositories;
 
 import com.example.recipionist.recipionistapi.Models.Ingredient.Ingredient;
-import com.example.recipionist.recipionistapi.Models.Meals.MealIngredient;
 import com.example.recipionist.recipionistapi.Services.IngredientService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class IngredientRepositoryTest {
@@ -46,9 +43,9 @@ class IngredientRepositoryTest {
 
     @Test
     public void getMealIngredientsOfIngredient() {
-        Ingredient ingredient = ingredientRepository.findIngredientByIngredientName("Lemon").get();
-        List<MealIngredient> mealIngredients = ingredient.getMealIngredients();
-        System.out.println("mealIngredients = " + mealIngredients);
+        Ingredient ingredient = ingredientRepository.findIngredientByIngredientNameIgnoreCase("Lemon").get();
+        //List<MealIngredient> mealIngredients = ingredient.getMealIngredients();
+        //System.out.println("mealIngredients = " + mealIngredients);
 
 
     }

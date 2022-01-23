@@ -57,12 +57,14 @@ public class MealCategory{
     @Column(name = "area", columnDefinition = "TEXT")
     protected String strArea;
 
+    /*
     @Fetch(FetchMode.JOIN)
     @OneToMany(
             cascade = CascadeType.ALL,
             mappedBy = "mealCategory")
     @JsonIgnore
     private List<Meal> meals;
+    */
 
 
     public MealCategory(String category, String thumbnail, String description, String strArea) {
@@ -72,14 +74,8 @@ public class MealCategory{
         this.strArea = strArea;
     }
 
-    public MealCategory(Long id, String category, String thumbnail, String description, String strArea) {
-        this.id = id;
-        this.categoryName = category;
-        this.thumbnail = thumbnail;
-        this.description = description;
-        this.strArea = strArea;
-    }
 
+    /*
     public void addMeal(Meal meal) {
         addMeal(meal, true);
     }
@@ -112,6 +108,8 @@ public class MealCategory{
     public void setMeals(List<Meal> meals) {
         this.meals = meals;
     }
+
+     */
 
 
 

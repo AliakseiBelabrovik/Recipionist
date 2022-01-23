@@ -1,16 +1,11 @@
 package com.example.recipionist.recipionistapi.Repositories;
 
 import com.example.recipionist.recipionistapi.Models.Ingredient.Ingredient;
-import com.example.recipionist.recipionistapi.Models.Meals.Meal;
-import com.example.recipionist.recipionistapi.Models.Meals.MealCategory;
 import com.example.recipionist.recipionistapi.Models.Meals.MealIngredient;
-import com.example.recipionist.recipionistapi.Models.User.User;
 import com.example.recipionist.recipionistapi.Services.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class MealIngredientRepositoryTest {
@@ -55,10 +50,10 @@ class MealIngredientRepositoryTest {
 
 
          */
-        Ingredient ingredient1 = ingredientRepository.findIngredientByIngredientName("Lemon").get();
-        Ingredient ingredient2 = ingredientRepository.findIngredientByIngredientName("Pesto").get();
-        Ingredient ingredient3 = ingredientRepository.findIngredientByIngredientName("Salt").get();
-        Ingredient ingredient4 = ingredientRepository.findIngredientByIngredientName("Paprika").get();
+        Ingredient ingredient1 = ingredientRepository.findIngredientByIngredientNameIgnoreCase("Lemon").get();
+        Ingredient ingredient2 = ingredientRepository.findIngredientByIngredientNameIgnoreCase("Pesto").get();
+        Ingredient ingredient3 = ingredientRepository.findIngredientByIngredientNameIgnoreCase("Salt").get();
+        Ingredient ingredient4 = ingredientRepository.findIngredientByIngredientNameIgnoreCase("Paprika").get();
 
 
         MealIngredient mealIngredient1 = MealIngredient.builder()

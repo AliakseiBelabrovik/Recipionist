@@ -76,11 +76,15 @@ public class Meal {
     )
     protected MealCategory mealCategory;
 
-    @JsonBackReference
+
     public MealCategory getMealCategory() {
         return mealCategory;
     }
 
+    public void setMealCategory(MealCategory mealCategory) {
+        this.mealCategory = mealCategory;
+    }
+    /*
     public void setMealCategory(MealCategory mealCategory) {
         setMealCategory(mealCategory, true);
     }
@@ -90,6 +94,8 @@ public class Meal {
             mealCategory.addMeal(this, false);
         }
     }
+     */
+
 
     @ManyToOne(
             //optional = false
@@ -99,64 +105,6 @@ public class Meal {
             referencedColumnName = "id" //is foreign key to id attribute in class User
     )
     private User user;
-
-    public void setUser(User user) {
-        setUser(user, true);
-    }
-
-    public void setUser(User user, boolean add) {
-        this.user = user;
-        if (user != null && add) {
-            user.addMeal(this, false);
-        }
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    @Fetch(FetchMode.JOIN)
-    @OneToMany(
-            //cascade = CascadeType.ALL,
-            mappedBy = "meal"
-    )
-    private List<MealIngredient> mealIngredients;
-
-
-    public void addMealIngredient(MealIngredient mealIngredient) {
-        addMealIngredient(mealIngredient, true);
-    }
-
-    public void addMealIngredient(MealIngredient mealIngredient, boolean set) {
-        if (mealIngredients == null) {
-            mealIngredients = new ArrayList<>();
-        }
-        if (mealIngredient != null) {
-            if (this.getMealIngredients().contains(mealIngredient)) {
-                this.getMealIngredients().set(this.getMealIngredients().indexOf(mealIngredient), mealIngredient);
-            } else {
-                this.getMealIngredients().add(mealIngredient);
-            }
-            if (set) {
-                mealIngredient.setMeal(this, false);
-            }
-        }
-    }
-
-
-    public void removeIngredient(MealIngredient mealIngredient) {
-        this.getMealIngredients().remove(mealIngredient);
-        mealIngredient.setMeal(null);
-    }
-
-
-    public List<MealIngredient> getMealIngredients() {
-        return mealIngredients;
-    }
-
-    public void setMealIngredients(List<MealIngredient> mealIngredients) {
-        this.mealIngredients = mealIngredients;
-    }
 
     /**
      * Ändern!! Als Relationships darstellen!!!!
@@ -181,10 +129,13 @@ public class Meal {
     @Transient //will not be a row in our database
     protected String drinkAlternate;
 
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-
-
-
+    public User getUser() {
+        return user;
+    }
 
     public Long getId() {
         return id;
@@ -230,6 +181,13 @@ public class Meal {
         return imageSrc;
     }
 
+    public String getYoutubeLink() {
+        return youtubeLink;
+    }
+
+    public void setYoutubeLink(String youtubeLink) {
+        this.youtubeLink = youtubeLink;
+    }
 
     public Meal(Long id, String mealName, String drinkAlternate, String category, String area, String thumbnail, String instructions,
                 String tags, ArrayList<String> ingredients, ArrayList<String> measures, String imageSrc){
@@ -249,20 +207,20 @@ public class Meal {
     @Override
     public String toString() {
         return "Meal{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", mealName='" + mealName + '\'' +
-                ", drinkAlternate='" + drinkAlternate + '\'' +
-                ", category='" + category + '\'' +
                 ", area='" + area + '\'' +
                 ", thumbnail='" + thumbnail + '\'' +
                 ", instructions='" + instructions + '\'' +
+                ", youtubeLink='" + youtubeLink + '\'' +
                 ", tags='" + tags + '\'' +
-                ", ingredients=" + ingredients +
-                ", measures=" + measures +
+                ", mealCategory=" + mealCategory +
+                ", user=" + user +
+                ", category='" + category + '\'' +
                 ", imageSrc='" + imageSrc + '\'' +
+                ", drinkAlternate='" + drinkAlternate + '\'' +
                 '}';
     }
-
 
     public void setId(Long id) {
         this.id = id;

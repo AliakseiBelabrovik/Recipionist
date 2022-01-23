@@ -14,6 +14,10 @@ import org.springframework.web.client.RestTemplate;
 public class TemplateController {
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    MealController mealController;
+
     private final String APIKEY = "bd1f07cb10d46551c60fa35f3094cf44";
     private final String UNIT = "metric";
     private final String URL = "https://api.openweathermap.org/data/2.5/weather?q=";
@@ -21,7 +25,8 @@ public class TemplateController {
 
     @RequestMapping("main")
     public String getToMainPage() {
-       return "Main";
+        mealController.getCategories();
+        return "Main";
     }
     @RequestMapping("recipes")
     public String goToRecipesPage() {
@@ -72,21 +77,7 @@ public class TemplateController {
         return data;
     }
 
-    @RequestMapping(path = "/session/currentuser", method = RequestMethod.GET)
-    public String checkCurrentUser() {
-        /*
-        AbstractAuthenticationToken auth =
-                (AbstractAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
 
-
-        User currentUser = (User) auth.getDetails();
-
-         */
-        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println("currentUser = " + currentUser);
-        System.out.println("name = " + currentUser.getFirstName());
-        return currentUser.getFirstName();
-    }
 
 
 

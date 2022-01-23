@@ -179,6 +179,14 @@ document.addEventListener("DOMContentLoaded", function (event) {
             if (this.mainContainer == null) {
                 //do nothing
             } else {
+                /*
+                for(let i = 0; i < this.sectionDOM.children.length; i++) {
+                    if (this.sectionDOM.children[i].id === "mainContainerDetailed") {
+                        this.sectionDOM.appendChild(this.mainContainer);
+                    }
+                }
+                 */
+                this.sectionDOM.appendChild(this.mainContainer);
                 this.mainContainer.parentElement.removeChild(this.mainContainer);
             }
 
@@ -217,7 +225,12 @@ document.addEventListener("DOMContentLoaded", function (event) {
             headerCategory.innerText = "Category: " + singleResult.category;
             let headerArea = document.createElement("h1");
             headerArea.id = "area";
-            headerArea.innerText = "Area: " + singleResult.area;
+            if (singleResult.area == null) {
+                headerArea.innerText = "Area: no information available" ;
+            } else {
+                headerArea.innerText = "Area: " + singleResult.area;
+            }
+
             let headerInstructions = document.createElement("h1");
             headerInstructions.id = "instructions";
             headerInstructions.innerText = "Instructions: ";
@@ -226,12 +239,19 @@ document.addEventListener("DOMContentLoaded", function (event) {
             paraWithInstructions.innerText = singleResult.instructions;
 
             let btnYoutube = document.createElement("a");
-            btnYoutube.href = singleResult.youtubeLink;
+            if (singleResult.youtubeLink == null ) {
+                btnYoutube.classList.add("disabled");
+                btnYoutube.setAttribute('aria-disabled', 'true');
+            } else {
+                btnYoutube.href = singleResult.youtubeLink;
+            }
             btnYoutube.target = "_blank";
             btnYoutube.classList.add("btn");
             btnYoutube.classList.add("btn-outline-dark");
             btnYoutube.classList.add("btn-lg");
             btnYoutube.classList.add("button-download");
+
+
 
             let youtubeLogo = document.createElement("i");
             youtubeLogo.classList.add("fab");
@@ -474,7 +494,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
                     let category = responseObj.category;
                     let area = responseObj.area;
                     let instructions = responseObj.instructions;
-                    let youtubeLink = null; //TODO
+                    let youtubeLink = responseObj.youtubeLink;
                     let ingredients = responseObj.ingredients; //array
                     let measures = responseObj.measures; //array
 
