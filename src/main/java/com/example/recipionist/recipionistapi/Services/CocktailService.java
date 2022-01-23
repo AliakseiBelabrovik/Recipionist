@@ -2,9 +2,8 @@ package com.example.recipionist.recipionistapi.Services;
 
 import com.example.recipionist.recipionistapi.DataLoader;
 import com.example.recipionist.recipionistapi.Models.Cocktail.*;
-import com.example.recipionist.recipionistapi.Models.Meals.Meal;
-import com.example.recipionist.recipionistapi.Models.Meals.MealsObjects;
-import com.example.recipionist.recipionistapi.Models.Meals.ShortMeal;
+import com.example.recipionist.recipionistapi.Repositories.*;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -14,11 +13,17 @@ import java.util.regex.Pattern;
 
 public class CocktailService {
 
-    DataLoader dataLoader;
-    CocktailObjects localCocktails ;
+
+    DataLoader dataLoader = new DataLoader();
+    CocktailObjects localCocktails = new CocktailObjects();
+    CocktailRepository CocktailRepository;
+    IngredientService ingredientService;
+    CocktailCategoryService CocktailCategoryService;
+    UserService userService;
+    CocktailIngredientService CocktailIngredientService;
 
     public CocktailService(){
-        dataLoader = new DataLoader();
+        
         localCocktails = new CocktailObjects();
     }
 
@@ -156,7 +161,7 @@ public class CocktailService {
             ArrayList<String> measures = this.getManyFromJsonArray(cocktail, "strMeasure");
 
             Cocktail cocktailModel = new Cocktail(
-                    (String) cocktail.get("idDrink"),
+                    (Long) cocktail.get("idDrink"),
                     (String) cocktail.get("strDrink"),
                     (String) cocktail.get("strCategory"),
                     (String) cocktail.get("strAlcoholic"),
@@ -182,14 +187,14 @@ public class CocktailService {
             JSONObject drink = (JSONObject) jsonArray.get(jsonArray.size()-1);
             jsonArray.remove(jsonArray.size()-1);
             CocktailShort cocktailShort = new CocktailShort(
-                    (String) drink.get("idDrink"),
+                    (Long) drink.get("idDrink"),
                     (String) drink.get("strDrink"),
                     (String) drink.get("strDrinkThumb")
             );
             foundDrinks.add(cocktailShort);
 
         }
-        //System.out.println(foundDrinks.get(1).getMealName());
+        //System.out.println(foundDrinks.get(1).getCocktailName());
         return foundDrinks;
     }
 
@@ -207,7 +212,7 @@ public class CocktailService {
             foundDrinks.add(cocktailCategory);
 
         }
-        //System.out.println(foundDrinks.get(1).getMealName());
+        //System.out.println(foundDrinks.get(1).getCocktailName());
         return foundDrinks;
     }
     public ArrayList<CocktailGlass> getCocktailGlasses (String data){
@@ -223,24 +228,24 @@ public class CocktailService {
             foundDrinks.add(cocktailCategory);
 
         }
-        //System.out.println(foundDrinks.get(1).getMealName());
+        //System.out.println(foundDrinks.get(1).getCocktailName());
         return foundDrinks;
     }
 
 
 
-    private ArrayList<String> getManyFromJsonArray(JSONObject meal, String similarElement){
+    private ArrayList<String> getManyFromJsonArray(JSONObject Cocktail, String similarElement){
         ArrayList<String> elements = new ArrayList<>();
         Pattern pattern= Pattern.compile(similarElement);
 
-        Matcher matcher = pattern.matcher(meal.toString());
+        Matcher matcher = pattern.matcher(Cocktail.toString());
         int counterElements = 1;
         while (matcher.find()){
 
-            if( meal.get((similarElement+counterElements)) != null && !meal.get((similarElement+counterElements)).equals("")){
-                elements.add((String) meal.get((similarElement+counterElements)));
+            if( Cocktail.get((similarElement+counterElements)) != null && !Cocktail.get((similarElement+counterElements)).equals("")){
+                elements.add((String) Cocktail.get((similarElement+counterElements)));
             }
-            meal.remove((similarElement+counterElements));
+            Cocktail.remove((similarElement+counterElements));
             counterElements++;
         }
 

@@ -1,5 +1,6 @@
 package com.example.recipionist.recipionistapi.Models.User;
 
+import com.example.recipionist.recipionistapi.Models.Cocktail.Cocktail;
 import com.example.recipionist.recipionistapi.Models.Meals.Meal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -73,6 +74,12 @@ public class User implements UserDetails {
             mappedBy = "user") //already mapped by user attribute in Meal class
     private List<Meal> meals;
 
+    @Fetch(FetchMode.JOIN)
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            mappedBy = "user") //already mapped by user attribute in Meal class
+    private List<Cocktail> cocktails;
+
 
     public void addMeal(Meal meal) {
         addMeal(meal, true);
@@ -96,6 +103,32 @@ public class User implements UserDetails {
     public void removeMeal(Meal meal) {
         this.getMeals().remove(meal);
         meal.setUser(null);
+    }
+
+
+    public void addCocktail(Cocktail cocktail) {
+        addCocktail(cocktail, true);
+    }
+
+    public void addCocktail(Cocktail cocktail, boolean set) {
+        if (cocktails == null) {
+            cocktails = new ArrayList<>();
+        }
+        if (cocktails != null) {
+            if (this.getCocktails().contains(cocktail)) {
+                this.getCocktails().set(this.getCocktails().indexOf(cocktail), cocktail);
+            } else {
+                this.getCocktails().add(cocktail);
+            }
+            if (set) {
+                cocktail.setUser(this, false);
+            }
+        }
+    }
+
+    public void removeCocktail(Cocktail cocktail) {
+        this.getCocktails().remove(cocktail);
+        cocktail.setUser(null);
     }
 
     public User(String firstName,

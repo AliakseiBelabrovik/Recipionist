@@ -1,25 +1,179 @@
 package com.example.recipionist.recipionistapi.Models.Cocktail;
 
+import com.example.recipionist.recipionistapi.Models.Meals.MealCategory;
+import com.example.recipionist.recipionistapi.Models.Meals.MealIngredient;
+import com.example.recipionist.recipionistapi.Models.User.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
+import java.util.List;
+
 
 @XmlRootElement
+@Entity
+@Table(
+        name = "cocktails",
+        uniqueConstraints = @UniqueConstraint(
+                name = "cocktail_name_unique",
+                columnNames = "name"
+        )
+)
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Cocktail {
-    protected String id;
-    protected String name;
-    protected String category;
-    protected String alcohol;
-    protected String glass;
-    protected String instructions;
-    protected String thumbnail;
-    protected ArrayList<String> ingredients;
 
-    public String getId() {
+    @Id
+    @SequenceGenerator(
+            name = "cocktails_id_seq",
+            sequenceName = "cocktails_id_seq",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "cocktails_id_seq"
+    )
+    @Column(name = "id", updatable = false)
+    protected Long id;
+
+    @Column(name = "name", nullable = false, columnDefinition = "TEXT")
+    protected String cocktailName;
+
+    //TODO Outsource in MealArea Klasse with annotation Embedded and Embeddable
+    @Column(name = "alcohol", columnDefinition = "TEXT")
+    protected String alcohol;
+
+    @Column(name = "thumbnail", columnDefinition = "TEXT")
+    protected String thumbnail;
+
+    @Column(name = "instructions", columnDefinition = "TEXT")
+    protected String instructions;
+
+    @Column(name = "glass", columnDefinition = "TEXT")
+    protected String glass;
+
+    @ManyToOne(
+            //optional = false
+    )
+    @JoinColumn(
+            name = "cocktail_category_id", //column in cocktails
+            referencedColumnName = "id" //is foreign key to id attribute in class MealCategory
+    )
+    protected CocktailCategory cocktailCategory;
+
+
+    @JsonBackReference
+    public CocktailCategory getCocktailCategory() {
+        return cocktailCategory;
+    }
+
+    public void setCocktailCategory(CocktailCategory cocktailCategory) {
+        setCocktailCategory(cocktailCategory, true);
+    }
+    public void setCocktailCategory(CocktailCategory cocktailCategory, boolean add) {
+        this.cocktailCategory = cocktailCategory;
+        if (cocktailCategory != null && add) {
+            cocktailCategory.addCocktail(this, false);
+        }
+    }
+
+    @ManyToOne(
+            //optional = false
+    )
+    @JoinColumn(
+            name = "user_id", //column in meals
+            referencedColumnName = "id" //is foreign key to id attribute in class User
+    )
+    private User user;
+
+    public void setUser(User user) {
+        setUser(user, true);
+    }
+
+    public void setUser(User user, boolean add) {
+        this.user = user;
+        if (user != null && add) {
+            user.addCocktail(this, false);
+        }
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    @Fetch(FetchMode.JOIN)
+    @OneToMany(
+            //cascade = CascadeType.ALL,
+            mappedBy = "cocktail"
+    )
+    private List<CocktailIngredient> cocktailIngredients;
+
+
+    public void addCocktailIngredient(CocktailIngredient cocktailIngredient) {
+        addCocktailIngredient(cocktailIngredient, true);
+    }
+
+    public void addCocktailIngredient(CocktailIngredient cocktailIngredient, boolean set) {
+        if (cocktailIngredients == null) {
+            cocktailIngredients = new ArrayList<>();
+        }
+        if (cocktailIngredient != null) {
+            if (this.getCocktailIngredients().contains(cocktailIngredient)) {
+                this.getCocktailIngredients().set(this.getCocktailIngredients().indexOf(cocktailIngredient), cocktailIngredient);
+            } else {
+                this.getCocktailIngredients().add(cocktailIngredient);
+            }
+            if (set) {
+                cocktailIngredient.setCocktail(this, false);
+            }
+        }
+    }
+
+
+    public void removeIngredient(CocktailIngredient cocktailIngredient) {
+        this.getCocktailIngredients().remove(cocktailIngredient);
+        cocktailIngredient.setCocktail(null);
+    }
+
+
+    public List<CocktailIngredient> getCocktailIngredients() {
+        return cocktailIngredients;
+    }
+
+    public void setCocktailIngredients(List<CocktailIngredient> cocktailIngredients) {
+        this.cocktailIngredients = cocktailIngredients;
+    }
+
+    /**
+     * Ändern!! Als Relationships darstellen!!!!
+     */
+    @Transient //will not be a row in our database
+    protected ArrayList<String> ingredients;
+    @Transient //will not be a row in our database
+    protected ArrayList<String> measures;
+
+    /**
+     * Diese Variable wurde als Relationship oben bereits behandelt.
+     * Wir müssen Methoden umschreiben, damit disese Variable nicht benutzt wird
+     */
+    @Transient //will not be in our database
+    protected String category;
+
+
+
+    public Long getId() {
         return id;
     }
 
     public String getName() {
-        return name;
+        return category;
     }
 
     public String getCategory() {
@@ -50,11 +204,11 @@ public class Cocktail {
         return measures;
     }
 
-    protected ArrayList<String> measures;
 
-    public Cocktail(String id, String name, String category, String alcohol, String glass, String instructions, String thumbnail, ArrayList<String> ingredients, ArrayList<String> measures) {
+
+    public Cocktail(Long id, String name, String category, String alcohol, String glass, String instructions, String thumbnail, ArrayList<String> ingredients, ArrayList<String> measures) {
         this.id = id;
-        this.name = name;
+        this.cocktailName = name;
         this.category = category;
         this.alcohol = alcohol;
         this.glass = glass;
@@ -79,7 +233,7 @@ public class Cocktail {
                 '}';
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

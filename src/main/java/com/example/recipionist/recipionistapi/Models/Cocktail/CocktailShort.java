@@ -9,7 +9,7 @@ public class CocktailShort {
     protected String mealName;
     protected String thumbnail;
 
-    public CocktailShort(String id, String mealName, String thumbnail) {
+    public CocktailShort(Long id, String mealName, String thumbnail) {
         this.id = id;
         this.mealName = mealName;
         this.thumbnail = thumbnail;

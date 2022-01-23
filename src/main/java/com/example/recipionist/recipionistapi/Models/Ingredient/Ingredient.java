@@ -1,5 +1,6 @@
 package com.example.recipionist.recipionistapi.Models.Ingredient;
 
+import com.example.recipionist.recipionistapi.Models.Cocktail.CocktailIngredient;
 import com.example.recipionist.recipionistapi.Models.Meals.Meal;
 import com.example.recipionist.recipionistapi.Models.Meals.MealIngredient;
 import lombok.AllArgsConstructor;
@@ -51,8 +52,19 @@ public class Ingredient {
     )
     private List<MealIngredient> mealIngredients;
 
+    @Fetch(FetchMode.JOIN)
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            mappedBy = "ingredient"
+    )
+    private List<CocktailIngredient> cocktailIngredients;
+
     public void addMealIngredient(MealIngredient mealIngredient) {
         addMealIngredient(mealIngredient, true);
+    }
+
+    public void addCocktailIngredient(CocktailIngredient cocktailIngredient) {
+        addCocktailIngredient(cocktailIngredient, true);
     }
 
 
@@ -71,6 +83,23 @@ public class Ingredient {
             }
         }
     }
+
+    public void addCocktailIngredient(CocktailIngredient cocktailIngredient, boolean set) {
+        if (cocktailIngredients == null) {
+            cocktailIngredients = new ArrayList<>();
+        }
+        if (cocktailIngredient != null) {
+            if (this.getCocktailIngredients().contains(cocktailIngredient)) {
+                this.getCocktailIngredients().set(this.getCocktailIngredients().indexOf(cocktailIngredient), cocktailIngredient);
+            } else {
+                this.getCocktailIngredients().add(cocktailIngredient);
+            }
+            if (set) {
+                cocktailIngredient.setIngredient(this, false);
+            }
+        }
+    }
+
     public void removeIngredient(MealIngredient mealIngredient) {
         this.getMealIngredients().remove(mealIngredient);
         mealIngredient.setIngredient(null);
@@ -81,8 +110,17 @@ public class Ingredient {
         return mealIngredients;
     }
 
+
+    public List<CocktailIngredient> getCocktailIngredients() {
+        return cocktailIngredients;
+    }
+
     public void setMealIngredients(List<MealIngredient> mealIngredients) {
         this.mealIngredients = mealIngredients;
+    }
+
+    public void setCocktailIngredients(List<CocktailIngredient> cocktailIngredients) {
+        this.cocktailIngredients = cocktailIngredients;
     }
 
 
