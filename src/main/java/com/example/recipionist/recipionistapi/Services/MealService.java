@@ -281,14 +281,12 @@ public class MealService {
     }
 
     public Meal getSingleMeal(String data){
-
         Meal meal;
         ArrayList<Meal> meals = this.getMeals(data);
-
         if(meals.size() == 1){
             meal = meals.get(0);
         }else{
-            meal = null;
+            meal= null;
         }
         return meal;
     }
@@ -406,6 +404,22 @@ public class MealService {
 
     public boolean isLocalMeal(Long id) {
         return mealRepository.findById(id).isPresent();
+    }
+
+    public Meal getSingleMeal(String data, String id){
+        Meal meal;
+        ArrayList<Meal> meals = this.getMeals(data);
+        if(meals.size() == 1){
+            meal = meals.get(0);
+        }else{
+            meal= null;
+        }
+        return meal;
+    }
+
+    public Meal saveMeal(Meal meal){
+        meal = this.localMeals.put(meal);
+        return meal;
     }
 
     public Meal updateMeal(Meal meal, String id){

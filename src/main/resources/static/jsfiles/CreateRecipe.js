@@ -607,7 +607,9 @@
             }
             createRecipeInnerSection.appendChild(categoryRow);
             createRecipeInnerSection.appendChild(imageRow);
-            createRecipeInnerSection.appendChild(youtubeLinkRow);
+            if (selectMealOrCocktail.value === "meals" || selectMealOrCocktail.value === "updateMeal") {
+                createRecipeInnerSection.appendChild(youtubeLinkRow);
+            }
             createRecipeInnerSection.appendChild(rowWithTable);
             createRecipeInnerSection.appendChild(rowWithButton);
 

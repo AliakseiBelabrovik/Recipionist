@@ -143,12 +143,11 @@ public class MealController {
     public Meal createMeal(
            Meal meal
             ) {
-        System.out.println(meal);
-        //Meal mealResult = mealService.saveMeal(meal);
+
         Meal mealResult = mealService.addNewMealToDatabase(meal);
         System.out.println(mealResult);
+
         return mealResult;
-        //return meal;
     }
 
 
@@ -157,20 +156,21 @@ public class MealController {
     public Meal updateMeal(@PathVariable String id,
             Meal meal) {
         System.out.println(meal);
+
         return mealService.updateMeal(meal, id);
     }
 
     @RequestMapping(value = "/api/recipionist/meals/delete/{id}", method = RequestMethod.DELETE)
     @ResponseBody
     public boolean deleteMeal( @PathVariable String id) {
-        //return mealService.deleteMeal(id);
+
         return mealService.deleteMealFromDatabase(Long.parseLong(id));
-        //return false;
     }
 
 
     @PatchMapping("/api/recipionist/meals/update/{id}")
     public Meal updateMealPatch(@PathVariable String id, Meal meal) {
+
         return mealService.updateMealPatch(meal, Long.parseLong(id));
     }
 }
