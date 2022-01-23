@@ -1,11 +1,13 @@
 package com.example.recipionist.recipionistapi.Models.Cocktail;
 
 import com.example.recipionist.recipionistapi.Models.Meals.Meal;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
+@Service
 public class CocktailObjects {
 
 
@@ -19,7 +21,7 @@ public class CocktailObjects {
 
         public Cocktail put(Cocktail cocktail){
             counter++;
-            cocktail.id = identifierLocal+counter;
+            cocktail.id = Long.parseLong(identifierLocal+counter);
             cocktailLocal.add(cocktail);
             return cocktail;
         }
@@ -37,7 +39,7 @@ public class CocktailObjects {
         public Cocktail getByName(String name){
             for (Cocktail cocktail:
                     cocktailLocal) {
-                if(cocktail.name.equals(name)){
+                if(cocktail.cocktailName.equals(name)){
                     return cocktail;
                 }
             }
@@ -48,7 +50,7 @@ public class CocktailObjects {
         public Cocktail getByFirstletter(String firstletter){
             for (Cocktail cocktail:
                     cocktailLocal) {
-                if(cocktail.name.substring(0,1).toLowerCase(Locale.ROOT).equals(firstletter.toLowerCase(Locale.ROOT))){
+                if(cocktail.cocktailName.substring(0,1).toLowerCase(Locale.ROOT).equals(firstletter.toLowerCase(Locale.ROOT))){
                     return cocktail;
                 }
             }
@@ -152,11 +154,7 @@ public class CocktailObjects {
 
 
 
-
-
-
-
-        public ArrayList<Cocktail> getAll(){
+    public ArrayList<Cocktail> getAll(){
             return this.cocktailLocal;
         }
 

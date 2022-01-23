@@ -5,8 +5,12 @@ import com.example.recipionist.recipionistapi.Models.Cocktail.CocktailCategory;
 import com.example.recipionist.recipionistapi.Models.Cocktail.CocktailGlass;
 import com.example.recipionist.recipionistapi.Models.Cocktail.CocktailShort;
 import com.example.recipionist.recipionistapi.Models.Meals.Meal;
+import com.example.recipionist.recipionistapi.Models.Meals.MealArea;
 import com.example.recipionist.recipionistapi.Models.Meals.ShortMeal;
 import com.example.recipionist.recipionistapi.Services.CocktailService;
+import com.example.recipionist.recipionistapi.Services.MealAreaService;
+import com.example.recipionist.recipionistapi.Services.MealCategoryService;
+import com.example.recipionist.recipionistapi.Services.MealService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -17,10 +21,19 @@ import java.util.ArrayList;
 @RestController
 public class CocktailController {
 
+
+    @Autowired
+    public CocktailController(
+            CocktailService cocktailService
+            ) {
+        this.cocktailService = cocktailService;
+
+    }
+
     @Autowired
     private RestTemplate restTemplate;
 
-    private CocktailService cocktailService = new CocktailService();
+    private CocktailService cocktailService;
     // private MealCategoryService mealCategoryService = new MealCategoryService();
 
 
@@ -44,17 +57,26 @@ public class CocktailController {
 
     @GetMapping("api/recipionist/cocktail/id/{id}")
     public Cocktail getById(@PathVariable String id) {
-        String data = restTemplate.getForObject("https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=" + id, String.class);
 
-        return cocktailService.getSingleCocktail(data, id);
+        //if meal is present in the local DB, get it
+        if (cocktailService.isLocalCocktail(Long.parseLong(id))) {
+            return cocktailService.getCocktailById(Long.parseLong(id));
+        } else {
+            //otherwise ask the MealDB
+            String data = restTemplate.getForObject("https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=" + id, String.class);
+            return cocktailService.getSingleCocktail(data);
+        }
+
+
     }
 
     @GetMapping("api/recipionist/cocktail/name/{name}")
     public ArrayList<CocktailShort> getByName(@PathVariable String name) {
 
         String data = restTemplate.getForObject("https://www.thecocktaildb.com/api/json/v1/1/search.php?s=" + name, String.class);
-        ArrayList<CocktailShort> allCocktails = cocktailService.getCocktailsShort(data);
-        allCocktails.addAll(this.cocktailService.getLocalCocktailsByName(name));
+        ArrayList<CocktailShort> allCocktails = cocktailService.getCocktailsShort(data); // parsing json data
+
+        allCocktails.addAll(this.cocktailService.getLocalCocktailsByName(name)); // get meals from db
 
         return allCocktails;
     }
@@ -73,16 +95,16 @@ public class CocktailController {
     public ArrayList<CocktailShort> getByGlass(@PathVariable String glass) {
         String data = restTemplate.getForObject("https://www.thecocktaildb.com/api/json/v1/1/filter.php?g="+glass, String.class);
 
-        ArrayList<CocktailShort> allCocktails = cocktailService.getCocktailsShort(data);
-        allCocktails.addAll(this.cocktailService.getLocalCocktailsByGlass(glass));
+        ArrayList<CocktailShort> allCocktails = cocktailService.getCocktailsShort(data);// parse data from json
+        allCocktails.addAll(this.cocktailService.getLocalCocktailsByGlass(glass)); // get content from db
 
         return allCocktails;
     }
     @GetMapping("api/recipionist/cocktail/category/{category}")
     public ArrayList<CocktailShort> getByCategory(@PathVariable String category) {
         String data = restTemplate.getForObject("https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=" + category, String.class);
-        ArrayList<CocktailShort> allCocktails = cocktailService.getCocktailsShort(data);
-        allCocktails.addAll(this.cocktailService.getLocalCocktailsByCategory(category));
+        ArrayList<CocktailShort> allCocktails = cocktailService.getCocktailsShort(data);// parse db data
+        allCocktails.addAll(this.cocktailService.getLocalCocktailsByCategory(category));// get data from database
 
         return allCocktails;
     }
@@ -99,7 +121,10 @@ public class CocktailController {
     public ArrayList<CocktailGlass> getCocktailGlasses() {
         String data = restTemplate.getForObject("https://www.thecocktaildb.com/api/json/v1/1/list.php?g=list", String.class);
 
-        return cocktailService.getCocktailGlasses(data);
+        ArrayList<CocktailGlass> cocktailGlasses = cocktailService.getCocktailGlasses(data);
+        cocktailGlasses.addAll(cocktailService.getLocalCocktailGlasses(cocktailGlasses)); // get database glasses
+
+        return cocktailGlasses;
     }
 
     @RequestMapping(value = "/api/recipionist/cocktails/new", method = RequestMethod.POST)
@@ -107,8 +132,7 @@ public class CocktailController {
     public Cocktail createCocktail(
             Cocktail cocktail
     ) {
-        Cocktail cocktailResult = cocktailService.saveCocktail(cocktail);
-        System.out.println(cocktail);
+        Cocktail cocktailResult = cocktailService.addNewCocktailToDatabase(cocktail);
         System.out.println(cocktailResult);
         return cocktailResult;
     }
@@ -124,12 +148,13 @@ public class CocktailController {
     @RequestMapping(value = "/api/recipionist/cocktails/delete/{id}", method = RequestMethod.DELETE)
     @ResponseBody
     public boolean deleteCocktail( @PathVariable String id) {
-        return cocktailService.deleteCocktail(id);
+
+        return cocktailService.deleteCocktailFromDatabase(Long.parseLong(id));
     }
 
     @PatchMapping("/api/recipionist/cocktails/update/{id}")
     public Cocktail updateMealPatch(@PathVariable String id,
                                 Cocktail cocktail) {
-        return cocktailService.updateCocktailPatch(cocktail, id);
+        return cocktailService.updateCocktailPatch(cocktail, Long.parseLong(id));
     }
 }

@@ -408,22 +408,6 @@ public class MealService {
         return mealRepository.findById(id).isPresent();
     }
 
-    public Meal getSingleMeal(String data, String id){
-        Meal meal;
-        ArrayList<Meal> meals = this.getMeals(data);
-        if(meals.size() == 1){
-            meal = meals.get(0);
-        }else{
-            meal= null;
-        }
-        return meal;
-    }
-
-    public Meal saveMeal(Meal meal){
-        meal = this.localMeals.put(meal);
-        return meal;
-    }
-
     public Meal updateMeal(Meal meal, String id){
         meal = this.localMeals.updateMeal(meal, id);
         return meal;

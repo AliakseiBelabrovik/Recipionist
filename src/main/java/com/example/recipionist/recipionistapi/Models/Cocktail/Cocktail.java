@@ -1,7 +1,6 @@
 package com.example.recipionist.recipionistapi.Models.Cocktail;
 
-import com.example.recipionist.recipionistapi.Models.Meals.MealCategory;
-import com.example.recipionist.recipionistapi.Models.Meals.MealIngredient;
+
 import com.example.recipionist.recipionistapi.Models.User.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
@@ -75,14 +74,14 @@ public class Cocktail {
     }
 
     public void setCocktailCategory(CocktailCategory cocktailCategory) {
-        setCocktailCategory(cocktailCategory, true);
-    }
-    public void setCocktailCategory(CocktailCategory cocktailCategory, boolean add) {
         this.cocktailCategory = cocktailCategory;
-        if (cocktailCategory != null && add) {
-            cocktailCategory.addCocktail(this, false);
-        }
     }
+//    public void setCocktailCategory(CocktailCategory cocktailCategory, boolean add) {
+//        this.cocktailCategory = cocktailCategory;
+//        if (cocktailCategory != null && add) {
+//            cocktailCategory.addCocktail(this, false);
+//        }
+//    }
 
     @ManyToOne(
             //optional = false
@@ -94,61 +93,18 @@ public class Cocktail {
     private User user;
 
     public void setUser(User user) {
-        setUser(user, true);
+        this.user = user;
     }
 
-    public void setUser(User user, boolean add) {
-        this.user = user;
-        if (user != null && add) {
-            user.addCocktail(this, false);
-        }
-    }
+//    public void setUser(User user, boolean add) {
+//        this.user = user;
+//        if (user != null && add) {
+//            user.addCocktail(this, false);
+//        }
+//    }
 
     public User getUser() {
         return user;
-    }
-
-    @Fetch(FetchMode.JOIN)
-    @OneToMany(
-            //cascade = CascadeType.ALL,
-            mappedBy = "cocktail"
-    )
-    private List<CocktailIngredient> cocktailIngredients;
-
-
-    public void addCocktailIngredient(CocktailIngredient cocktailIngredient) {
-        addCocktailIngredient(cocktailIngredient, true);
-    }
-
-    public void addCocktailIngredient(CocktailIngredient cocktailIngredient, boolean set) {
-        if (cocktailIngredients == null) {
-            cocktailIngredients = new ArrayList<>();
-        }
-        if (cocktailIngredient != null) {
-            if (this.getCocktailIngredients().contains(cocktailIngredient)) {
-                this.getCocktailIngredients().set(this.getCocktailIngredients().indexOf(cocktailIngredient), cocktailIngredient);
-            } else {
-                this.getCocktailIngredients().add(cocktailIngredient);
-            }
-            if (set) {
-                cocktailIngredient.setCocktail(this, false);
-            }
-        }
-    }
-
-
-    public void removeIngredient(CocktailIngredient cocktailIngredient) {
-        this.getCocktailIngredients().remove(cocktailIngredient);
-        cocktailIngredient.setCocktail(null);
-    }
-
-
-    public List<CocktailIngredient> getCocktailIngredients() {
-        return cocktailIngredients;
-    }
-
-    public void setCocktailIngredients(List<CocktailIngredient> cocktailIngredients) {
-        this.cocktailIngredients = cocktailIngredients;
     }
 
     /**
@@ -173,7 +129,7 @@ public class Cocktail {
     }
 
     public String getName() {
-        return category;
+        return cocktailName;
     }
 
     public String getCategory() {
@@ -222,7 +178,7 @@ public class Cocktail {
     public String toString() {
         return "Cocktail{" +
                 "id='" + id + '\'' +
-                ", name='" + name + '\'' +
+                ", name='" + cocktailName + '\'' +
                 ", category='" + category + '\'' +
                 ", alcohol='" + alcohol + '\'' +
                 ", glass='" + glass + '\'' +
@@ -238,7 +194,7 @@ public class Cocktail {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.cocktailName = name;
     }
 
     public void setCategory(String category) {

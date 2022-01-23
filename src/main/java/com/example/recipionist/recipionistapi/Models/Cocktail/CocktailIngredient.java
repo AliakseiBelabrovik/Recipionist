@@ -54,16 +54,18 @@ public class CocktailIngredient {
         return cocktail;
     }
 
-    public void setCocktail(Cocktail cocktail) {
-        setCocktail(cocktail, true);
-    }
+    public void setCocktail(Cocktail cocktail) { this.cocktail = cocktail; }
 
-    public void setCocktail(Cocktail cocktail, boolean add) {
-        this.cocktail = cocktail;
-        if (cocktail != null && add) {
-            cocktail.addCocktailIngredient(this, false);
-        }
-    }
+//    public void setCocktail(Cocktail cocktail) {
+//        setCocktail(cocktail, true);
+//    }
+//
+//    public void setCocktail(Cocktail cocktail, boolean add) {
+//        this.cocktail = cocktail;
+//        if (cocktail != null && add) {
+//            cocktail.addCocktailIngredient(this, false);
+//        }
+//    }
 
 
     public Ingredient getIngredient() {
@@ -71,22 +73,34 @@ public class CocktailIngredient {
     }
 
     public void setIngredient(Ingredient ingredient) {
-        setIngredient(ingredient, true);
+       this.ingredient = ingredient;
     }
-    public void setIngredient(Ingredient ingredient, boolean add) {
-        this.ingredient = ingredient;
-        if (ingredient != null && add) {
-            ingredient.addCocktailIngredient(this, false);
-        }
-    }
+
+//    public void setIngredient(Ingredient ingredient) {
+//        setIngredient(ingredient, true);
+//    }
+//    public void setIngredient(Ingredient ingredient, boolean add) {
+//        this.ingredient = ingredient;
+//        if (ingredient != null && add) {
+//            ingredient.addCocktailIngredient(this, false);
+//        }
+//    }
 
     public Long getId() {
         return id;
     }
 
+    public String getMeasure() {
+        return measure;
+    }
+
+    public void setMeasure(String measure) {
+        this.measure = measure;
+    }
+
     @Override
     public String toString() {
-        return "MealIngredient{" +
+        return "CocktailIngredient{" +
                 "id=" + id +
                 ", measure='" + measure + '\'' +
                 '}';

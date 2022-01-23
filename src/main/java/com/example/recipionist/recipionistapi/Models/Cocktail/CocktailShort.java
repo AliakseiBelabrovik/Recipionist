@@ -1,25 +1,28 @@
 package com.example.recipionist.recipionistapi.Models.Cocktail;
 
+import lombok.Builder;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
+@Builder
 public class CocktailShort {
 
-    protected String id;
-    protected String mealName;
+    protected Long id;
+    protected String cocktailName;
     protected String thumbnail;
 
-    public CocktailShort(Long id, String mealName, String thumbnail) {
+    public CocktailShort(Long id, String cocktailName, String thumbnail) {
         this.id = id;
-        this.mealName = mealName;
+        this.cocktailName = cocktailName;
         this.thumbnail = thumbnail;
     }
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public String getMealName() {
-        return mealName;
+    public String getCocktailName() {
+        return cocktailName;
     }
 
     public String getThumbnail() {

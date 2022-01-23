@@ -36,7 +36,7 @@ public class CocktailCategoryService {
 
     public CocktailCategory getCocktailCategoryByName(String categoryName) {
         Optional<CocktailCategory> optionalCocktailCategory =
-                cocktailCategoryRepository.findCocktailCategoryByCategoryName(categoryName);
+                cocktailCategoryRepository.findCocktailCategoryByCategory(categoryName);
         return optionalCocktailCategory
                 .orElseThrow(() -> new IllegalStateException("No category with name " + categoryName + " was found."));
     }
@@ -44,7 +44,7 @@ public class CocktailCategoryService {
     public void addNewCocktailCategoryInDatabase(CocktailCategory cocktailCategory) {
 
         Optional<CocktailCategory> cocktailCategoryOptional =
-                cocktailCategoryRepository.findCocktailCategoryByCategoryName(cocktailCategory.getCategory());
+                cocktailCategoryRepository.findCocktailCategoryByCategory(cocktailCategory.getCategory());
 
         System.out.println("Optional user is " + cocktailCategoryOptional);
         if (cocktailCategoryOptional.isPresent()) {

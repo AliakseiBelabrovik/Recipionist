@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface CocktailCategoryRepository extends JpaRepository<CocktailCategory, Long > {
-    Optional<CocktailCategory> findCocktailCategoryByCategoryName(String categoryName);
+public interface CocktailCategoryRepository extends JpaRepository<CocktailCategory, Long> {
+    Optional<CocktailCategory> findCocktailCategoryByCategory(String category);
 }
