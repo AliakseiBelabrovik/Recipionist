@@ -80,7 +80,7 @@ public class MealController {
         } else {
             //otherwise ask the MealDB
             String data = restTemplate.getForObject("https://www.themealdb.com/api/json/v1/1/lookup.php?i="+id, String.class);
-            return mealService.getSingleMeal(data, id);
+            return mealService.getSingleMeal(data);
         }
     }
 
