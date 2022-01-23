@@ -162,6 +162,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
 
             if (this.mainContainer != null) {
+                this.sectionDOM.appendChild(this.mainContainer);
                 this.mainContainer.parentElement.removeChild(this.mainContainer);
             } else {
                 //Do nothing
@@ -403,8 +404,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
                         category = "Soft";
                     }
                 }
-
-                
                 triggerShortMealSearch(selectedSearchOption, category);
             } else {
                 triggerShortMealSearch(selectedSearchOption, searchInput);
@@ -435,7 +434,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
                     let objectResult = new SingleShortResult(id, name, image);
                     resultOfShortSearch.listOfResults.push(objectResult);
                 });
-
+                //resultOfShortSearch.removeResultsOnScreen();
                 resultOfShortSearch.displayResultsOnScreen();
             }
 
