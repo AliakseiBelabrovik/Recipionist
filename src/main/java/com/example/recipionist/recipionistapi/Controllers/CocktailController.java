@@ -102,6 +102,19 @@ public class CocktailController {
     }
     @GetMapping("api/recipionist/cocktail/category/{category}")
     public ArrayList<CocktailShort> getByCategory(@PathVariable String category) {
+
+        if(category.equals("Milk")){
+            category = "Milk_/_Float_/_Shake ";
+        } else if(category.equals("Coffee")){
+            category = "Coffee_/_Tea";
+        }else if (category.equals("Other")){
+            category = "Other/Unknown";
+        }else if(category.equals("Punch")){
+            category = "Punch_/_Party_Drink";
+        } else if(category.equals("Soft")){
+            category = "Soft_Drink_/_Soda";
+        }
+
         String data = restTemplate.getForObject("https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=" + category, String.class);
         ArrayList<CocktailShort> allCocktails = cocktailService.getCocktailsShort(data);// parse db data
         allCocktails.addAll(this.cocktailService.getLocalCocktailsByCategory(category));// get data from database

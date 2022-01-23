@@ -399,6 +399,9 @@ public class CocktailService {
     }
 
     public ArrayList<CocktailShort> getCocktailsShort(String data){
+        if(data == null){
+            return new ArrayList<CocktailShort>();
+        }
         JSONObject cocktailsShort = dataLoader.loadData(data);
         ArrayList<CocktailShort> foundDrinks = new ArrayList<>();
         JSONArray jsonArray = (JSONArray) cocktailsShort.remove("drinks");

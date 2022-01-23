@@ -202,8 +202,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
             headerCategory.id = "category";
             headerCategory.innerText = "Category: " + singleResult.category;
             let headerArea = document.createElement("h1");
-            headerArea.id = "area";
-            headerArea.innerText = "Area: " + singleResult.area;
+            headerArea.id = "glass";
+            headerArea.innerText = "Glass: " + singleResult.glass;
             let headerInstructions = document.createElement("h1");
             headerInstructions.id = "instructions";
             headerInstructions.innerText = "Instructions: ";
@@ -388,7 +388,24 @@ document.addEventListener("DOMContentLoaded", function (event) {
             triggerDetailedMealSearch(selectedSearchOption);
         } else if (selectedSearchOption === "category/" || selectedSearchOption === "glass/") {
             if (searchBar.disabled) {
-                triggerShortMealSearch(selectedSearchOption, document.getElementById("select-categories-area-option").value);
+                let category = document.getElementById("select-categories-area-option").value;
+
+                if(selectedSearchOption === "category/"){
+                    if(category.includes("Milk")){
+                        category = "Milk";
+                    } else if(category.includes("Coffee")){
+                        category = "Coffee";
+                    }else if (category.includes("Other")){
+                        category = "Other";
+                    }else if(category.includes("Punch")){
+                        category = "Punch";
+                    } else if(category.includes("Soft")){
+                        category = "Soft";
+                    }
+                }
+
+                
+                triggerShortMealSearch(selectedSearchOption, category);
             } else {
                 triggerShortMealSearch(selectedSearchOption, searchInput);
             }
@@ -413,7 +430,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
                 responseObj.forEach(item => {
                     let id = item.id;
-                    let name = item.mealName;
+                    let name = item.cocktailName;
                     let image = item.thumbnail;
                     let objectResult = new SingleShortResult(id, name, image);
                     resultOfShortSearch.listOfResults.push(objectResult);
@@ -705,6 +722,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
             btnView.innerText = "Search";
 
             btnView.addEventListener("click", function () {
+
                 triggerShortMealSearch("category/", singleResult.categoryName);
             })
 
